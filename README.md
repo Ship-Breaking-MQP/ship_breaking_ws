@@ -8,5 +8,7 @@ Simply following the ROS tutorials is enough, just cd into mqp_ws and run 'catki
 
 Make sure moveit and all other necessary packages are installed as well, otherwise there will be errors and some things might not work.
 
+Additional information on running everything and setting up the environment (along with a description of what each package does) is found in the README in mqp_ws
+
 ## Organization
 This workspace is a subfolder of this repository in case additional supporting files need to be added around it.  If necessary, this can be easily reorganized and cleaned up to work with your project.
