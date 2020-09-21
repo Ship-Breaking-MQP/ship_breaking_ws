@@ -31,7 +31,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="3.06357" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -48,7 +48,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.34471" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -74,7 +74,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.36414" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -100,7 +100,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.38050" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -126,7 +126,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.42754" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -152,7 +152,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="3.49611" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -178,7 +178,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="1.46736" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -204,7 +204,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="0.45606" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
