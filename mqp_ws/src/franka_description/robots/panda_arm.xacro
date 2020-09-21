@@ -31,7 +31,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="3.06357" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -48,7 +48,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.34471" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -74,7 +74,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.36414" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -100,7 +100,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.38050" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -126,7 +126,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="2.42754" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -152,7 +152,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="3.49611" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -178,7 +178,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="1.46736" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -204,7 +204,7 @@
         </geometry>
       </collision>
       <inertial>
-        <mass value="0.1" />
+        <mass value="0.45606" />
         <inertia ixx="0.03" iyy="0.03" izz="0.03" ixy="0.0" ixz="0.0" iyz="0.0" />
       </inertial>
     </link>
@@ -304,7 +304,55 @@
 	<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
 	<mechanicalReduction>1</mechanicalReduction>
       </actuator>
-    </transmission> 
+    </transmission>
+
+    <gazebo reference="${arm_id}_link0">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link1">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link2">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link3">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link4">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link5">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link6">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link7">
+      <material>Gazebo/White</material>
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
   </xacro:macro>
 
   <!-- Gazebo control plugin -->
@@ -314,5 +362,7 @@
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
+
+
 
 </robot>
