@@ -307,41 +307,49 @@
     </transmission>
 
     <gazebo reference="${arm_id}_link0">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link1">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link2">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link3">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link4">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link5">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link6">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
 
     <gazebo reference="${arm_id}_link7">
+      <material>Gazebo/White</material>
       <mu1>0.61</mu1>
       <mu2>0.61</mu2>
     </gazebo>
