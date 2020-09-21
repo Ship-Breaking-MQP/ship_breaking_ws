@@ -304,7 +304,47 @@
 	<hardwareInterface>hardware_interface/EffortJointInterface</hardwareInterface>
 	<mechanicalReduction>1</mechanicalReduction>
       </actuator>
-    </transmission> 
+    </transmission>
+
+    <gazebo reference="${arm_id}_link0">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link1">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link2">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link3">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link4">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link5">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link6">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
+
+    <gazebo reference="${arm_id}_link7">
+      <mu1>0.61</mu1>
+      <mu2>0.61</mu2>
+    </gazebo>
   </xacro:macro>
 
   <!-- Gazebo control plugin -->
@@ -314,5 +354,7 @@
       <robotSimType>gazebo_ros_control/DefaultRobotHWSim</robotSimType>
     </plugin>
   </gazebo>
+
+
 
 </robot>
