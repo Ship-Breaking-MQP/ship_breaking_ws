@@ -23,7 +23,7 @@
     <!-- Sensor -->
     <gazebo reference="camera_link">
       
-      <sensor type="depth" name="${sensor_name}">
+      <sensor type="depth" name="camera">
 	<always_on>1</always_on>
 	<visualize>true</visualize>
 	<update_rate>0</update_rate>
@@ -40,19 +40,19 @@
 	  </clip>
 	</camera>
 
-	<plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
+	<plugin name="camera_plugin" filename="libgazebo_ros_openni_kinect.so">
 	  <baseline>0.2</baseline>
 	  <alwaysOn>true</alwaysOn>
 	  <updateRate>0.0</updateRate>
-	  <cameraName>/${sensor_name}</cameraName>
-	  <imageTopicName>/${sensor_name}/depth/image_raw</imageTopicName>
-	  <cameraInfoTopicName>/${sensor_name}/depth/camera_info</cameraInfoTopicName>
-	  <depthImageTopicName>/${sensor_name}/depth/image_raw</depthImageTopicName>
-	  <depthImageInfoTopicName>/${sensor_name}/depth/camera_info</depthImageInfoTopicName>
-	  <pointCloudTopicName>/${sensor_name}/depth/points</pointCloudTopicName>
-	  <frameName>${sensor_name}_optical_link</frameName>
-	  <pointCloudCutoff>0.1</pointCloudCutoff>
-	  <pointCloudCutoffMax>3</pointCloudCutoffMax>
+	  <cameraName>camera_ir</cameraName>
+	  <imageTopicName>/camera/depth/image_raw</imageTopicName>
+	  <cameraInfoTopicName>/camera/color/camera_info</cameraInfoTopicName>
+	  <depthImageTopicName>/camera/depth/image_raw</depthImageTopicName>
+	  <depthImageInfoTopicName>/camera/depth/camera_info</depthImageInfoTopicName>
+	  <pointCloudTopicName>/camera/depth/points</pointCloudTopicName>
+	  <frameName>camera_link</frameName>
+	  <pointCloudCutoff>0.5</pointCloudCutoff>
+	  <pointCloudCutoffMax>3.0</pointCloudCutoffMax>
 	  <distortionK1>0</distortionK1>
 	  <distortionK2>0</distortionK2>
 	  <distortionK3>0</distortionK3>
