@@ -29,14 +29,8 @@
   <param name="robot_description_waffle" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
   <node name="spawn_waffle" pkg="gazebo_ros" type="spawn_model" 
         args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description_waffle" />
-<!--  <node name="rvix" pkg="rviz" type="rviz" args="-d $(find panda_moveit_config)/launch/moveit.rviz" respawn="false" output="screen"/>-->
 
   <!-- Launch controllers & moveit -->
   <include file="$(find panda_moveit_controller)/launch/main.launch" />
   <include file="$(find panda_moveit_config)/launch/move_group.launch" />
-
-  <!-- Load the URDF, SRDF and other .yaml configuration files on the param server -->
-  <include file="$(find panda_moveit_config)/launch/planning_context.launch">
-    <arg name="load_robot_description" value="true"/>
-  </include>
 </launch>
