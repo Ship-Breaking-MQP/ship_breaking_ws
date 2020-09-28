@@ -10,7 +10,6 @@ project(scrap_burning)
 find_package(catkin REQUIRED COMPONENTS
         roscpp
         moveit_ros_planning_interface
-        moveit_visual_tools
 )
 
 ## System dependencies are found with CMake's conventions
