@@ -8,7 +8,9 @@ project(scrap_burning)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
+        roscpp
+        moveit_ros_planning_interface
+        moveit_visual_tools
 )
 
 ## System dependencies are found with CMake's conventions
@@ -202,3 +204,8 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+add_executable(testArmMovement src/testArmMovement.cpp)
+target_link_libraries(testArmMovement ${catkin_LIBRARIES} ${Boost_LIBRARIES})
+install(TARGETS testArmMovement DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
+
+install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
