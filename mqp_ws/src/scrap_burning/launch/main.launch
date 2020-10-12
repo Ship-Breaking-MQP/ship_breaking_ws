@@ -24,11 +24,11 @@
   <!-- Spawn robot & scrap -->
   <node name="spawn_franka" pkg="gazebo_ros" type="spawn_model"
         args="-param robot_description -urdf -model panda -J panda_joint2 -0.78 -J panda_joint4 -0.78 -J panda_joint6 0.78 -J panda_joint7 0.78" />
-  <node name="spawn_scrap" pkg="gazebo_ros" type="spawn_model"
-  	args="-file $(find scrap_descs)/desc/$(arg scrap_name).urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />
-  <param name="robot_description_waffle" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-  <node name="spawn_waffle" pkg="gazebo_ros" type="spawn_model" 
-        args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description_waffle" />
+<!--  <node name="spawn_scrap" pkg="gazebo_ros" type="spawn_model"-->
+<!--  	args="-file $(find scrap_descs)/desc/$(arg scrap_name).urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />-->
+<!--  <param name="robot_description_waffle" command="$(find xacro)/xacro &#45;&#45;inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />-->
+<!--  <node name="spawn_waffle" pkg="gazebo_ros" type="spawn_model" -->
+<!--        args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description_waffle" />-->
 
   <!-- Launch controllers & moveit -->
   <include file="$(find panda_moveit_controller)/launch/main.launch" />

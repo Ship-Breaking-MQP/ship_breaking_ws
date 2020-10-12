@@ -208,3 +208,7 @@ target_link_libraries(testArmMovement ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 install(TARGETS testArmMovement DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+install(PROGRAMS
+        scripts/pythonTestArmMovement.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        )
