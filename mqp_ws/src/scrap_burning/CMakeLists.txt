@@ -8,8 +8,19 @@ project(scrap_burning)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
+        controller_interface
+        franka_control
+        franka_hw
+        dynamic_reconfigure
+        hardware_interface
+        pluginlib
+        realtime_tools
+        roscpp
+        rospy
 )
+
+find_package(Franka 0.4.0 REQUIRED)
+find_package(Eigen3 REQUIRED)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -100,12 +111,6 @@ find_package(catkin REQUIRED COMPONENTS
 ## LIBRARIES: libraries you create in this project that dependent projects also need
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
-catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES scrap_burning
-#  CATKIN_DEPENDS roscpp
-#  DEPENDS system_lib
-)
 
 ###########
 ## Build ##
@@ -113,9 +118,9 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+include_directories( include
+        ${catkin_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -202,3 +207,42 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
+
+generate_dynamic_reconfigure_options(
+        cfg/plug_in_params.cfg
+)
+
+catkin_package(
+        #  INCLUDE_DIRS include
+        #  LIBRARIES scrap_burning
+        #  CATKIN_DEPENDS roscpp
+        #  DEPENDS system_lib
+)
+
+
+add_library(scrap_burning_controllers
+        src/plug_in_controller.cpp
+        )
+
+add_dependencies(scrap_burning_controllers
+        ${${PROJECT_NAME}_EXPORTED_TARGETS}
+        ${catkin_EXPORTED_TARGETS}
+        )
+
+target_link_libraries(scrap_burning_controllers PUBLIC
+        ${Franka_LIBRARIES}
+        ${catkin_LIBRARIES}
+        )
+
+target_include_directories(scrap_burning_controllers SYSTEM PUBLIC
+        ${Franka_INCLUDE_DIRS}
+        ${EIGEN3_INCLUDE_DIRS}
+        ${catkin_INCLUDE_DIRS}
+        )
+
+install(DIRECTORY config
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+        )
+install(DIRECTORY launch
+        DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+        )
