@@ -11,6 +11,7 @@
 #include <dynamic_reconfigure/server.h>
 #include <franka_hw/franka_model_interface.h>
 #include <franka_hw/franka_state_interface.h>
+#include <franka_hw/franka_cartesian_command_interface.h>
 #include <hardware_interface/joint_command_interface.h>
 #include <hardware_interface/robot_hw.h>
 #include <ros/node_handle.h>
@@ -22,7 +23,8 @@ namespace scrap_burning_controllers {
     class PlugInController : public controller_interface::MultiInterfaceController<
             franka_hw::FrankaModelInterface,
             hardware_interface::EffortJointInterface,
-            franka_hw::FrankaStateInterface> {
+            franka_hw::FrankaStateInterface,
+            franka_hw::FrankaPoseCartesianInterface> {
 
     public:
         bool init(hardware_interface::RobotHW* robot_hw, ros::NodeHandle& node_handle) override;
@@ -33,6 +35,6 @@ namespace scrap_burning_controllers {
         std::unique_ptr<franka_hw::FrankaModelHandle> model_handle_;
         std::unique_ptr<franka_hw::FrankaStateHandle> state_handle_;
         std::vector<hardware_interface::JointHandle> joint_handles_;
-        
+        std::unique_ptr<franka_hw::FrankaCartesianPoseHandle> pose_handle_;
     };
 }

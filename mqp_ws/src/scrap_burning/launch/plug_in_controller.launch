@@ -27,9 +27,17 @@
           args="-file $(find scrap_descs)/desc/$(arg scrap_name).urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />
 
     <!-- Launch controllers & moveit -->
+    <!-- Load params -->
     <rosparam file="$(find scrap_burning)/config/controllers.yaml" command="load" />
-    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="plug_in_controller"/>
-    <node name="rqt_reconfigure" pkg="rqt_reconfigure" type="rqt_reconfigure" required="false" />
-    <include file="$(find panda_moveit_controller)/launch/main.launch" />
+    <rosparam file="$(find panda_moveit_controller)/config/panda_control.yaml" command="load" />
+
+    <!-- Launch controllers -->
+    <node name="controller_spawner" pkg="controller_manager" type="spawner" respawn="false" output="screen" args="plug_in_controller" ns="/panda"/>
+    <node name="panda_moveit_controller_spawner" pkg="controller_manager" type="spawner" respawn="false" args="joint_state_controller gazebo_ros_control" ns="/panda" />
+
+    <!-- Launch robot_state_publisher -->
+    <node name="panda_moveit_robot_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" respawn="true">
+        <remap from="joint_states" to="panda/joint_states" />
+    </node>
     <include file="$(find panda_moveit_config)/launch/move_group.launch" />
 </launch>

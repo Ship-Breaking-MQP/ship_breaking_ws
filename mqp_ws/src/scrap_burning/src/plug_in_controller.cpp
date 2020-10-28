@@ -32,3 +32,6 @@ void scrap_burning_controllers::PlugInController::update(const ros::Time &, cons
 //void scrap_burning_controllers::PlugInController::plugInParamCallback(scrap_burning::plug_in_paramConfig &config, uint32_t level) {
 //
 //}
+
+PLUGINLIB_EXPORT_CLASS(scrap_burning_controllers::PlugInController,
+                       controller_interface::ControllerBase)
