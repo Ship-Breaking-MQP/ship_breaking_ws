@@ -253,6 +253,7 @@ class MoveGroupPythonIntefaceTutorial(object):
             0.01,        # eef_step
             0.0)         # jump_threshold
 
+
         # Note: We are just planning, not asking move_group to actually move the robot yet:
         return plan, fraction
 

@@ -114,8 +114,7 @@ catkin_package(
 
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
-include_directories(
-# include
+include_directories(include
   ${catkin_INCLUDE_DIRS}
 )
 
@@ -208,7 +207,6 @@ target_link_libraries(testArmMovement ${catkin_LIBRARIES} ${Boost_LIBRARIES})
 install(TARGETS testArmMovement DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
 
 install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
-install(PROGRAMS
-        scripts/pythonTestArmMovement.py
+install(PROGRAMS scripts/pythonTestArmMovement.py scripts/PythonCartesian.py
         DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
         )
