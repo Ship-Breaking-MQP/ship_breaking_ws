@@ -1,0 +1,7 @@
+<library path="lib/scrap_burning_controllers">
+    <class name="scrap_burning_controllers/PlugInController" type="scrap_burning_controllers::PlugInController" base_class_type="controller_interface::ControllerBase">
+        <description>
+            Plug-in
+        </description>
+    </class>
+</library>
