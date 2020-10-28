@@ -1,7 +1,6 @@
 <launch>
   <!-- Scrap spawning arguments -->
   <arg name="scrap_name" default="simpleCylinder" />
-  <arg name="model" default="$(env TURTLEBOT3_MODEL)" doc="model type [burger, waffle, waffle_pi]"/>
   <arg name="x" default="0.75" />
   <arg name="y" default="0.0" />
   <arg name="z" default="0.0" />
@@ -15,7 +14,6 @@
   <node name="map_frame" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 map world 100" />
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="paused" value="true" />
-    <arg name="world_name" value="$(find turtlebot3_gazebo)/worlds/empty.world"/>
     <arg name="use_sim_time" value="true"/>
     <arg name="gui" value="true"/>
     <arg name="headless" value="false"/>
@@ -27,9 +25,6 @@
         args="-param robot_description -urdf -model panda -J panda_joint2 -0.78 -J panda_joint4 -0.78 -J panda_joint6 0.78 -J panda_joint7 0.78" />
   <node name="spawn_scrap" pkg="gazebo_ros" type="spawn_model"
   	args="-file $(find scrap_descs)/desc/$(arg scrap_name).urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />
-  <param name="robot_description_waffle" command="$(find xacro)/xacro --inorder $(find turtlebot3_description)/urdf/turtlebot3_$(arg model).urdf.xacro" />
-  <node name="spawn_waffle" pkg="gazebo_ros" type="spawn_model" 
-        args="-urdf -model turtlebot3_$(arg model) -x $(arg x_pos) -y $(arg y_pos) -z $(arg z_pos) -param robot_description_waffle" />
 
   <!-- Launch controllers & moveit -->
   <include file="$(find panda_moveit_controller)/launch/main.launch" />
