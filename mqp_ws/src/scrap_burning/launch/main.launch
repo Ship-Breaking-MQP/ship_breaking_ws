@@ -1,6 +1,6 @@
 <launch>
   <!-- Scrap spawning arguments -->
-  <arg name="scrap_name" default="simpleBox" />
+  <arg name="scrap_name" default="simpleCylinder" />
   <arg name="x" default="0.75" />
   <arg name="y" default="0.5" />
   <arg name="z" default="0" />
