@@ -1,12 +1,9 @@
 <launch>
   <!-- Scrap spawning arguments -->
-  <arg name="scrap_name" default="simpleCylinder" />
+  <arg name="scrap_name" default="simpleBox" />
   <arg name="x" default="0.75" />
-  <arg name="y" default="0.0" />
-  <arg name="z" default="0.0" />
-  <arg name="x_pos" default="5.0"/>
-  <arg name="y_pos" default="0.0"/>
-  <arg name="z_pos" default="0.0"/>
+  <arg name="y" default="0.5" />
+  <arg name="z" default="0" />
 
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find franka_description)/robots/franka_camera.xacro" />
 
@@ -23,8 +20,10 @@
   <!-- Spawn robot & scrap -->
   <node name="spawn_franka" pkg="gazebo_ros" type="spawn_model"
         args="-param robot_description -urdf -model panda -J panda_joint2 -0.78 -J panda_joint4 -0.78 -J panda_joint6 0.78 -J panda_joint7 0.78" />
-<!--  <node name="spawn_scrap" pkg="gazebo_ros" type="spawn_model"-->
-<!--  	args="-file $(find scrap_descs)/desc/$(arg scrap_name).urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />-->
+  <node name="spawn_scrap" pkg="gazebo_ros" type="spawn_model"
+  	args="-file $(find scrap_descs)/desc/$(arg scrap_name).urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />
+<!--    <node name="spawn_scrap" pkg="gazebo_ros" type="spawn_model"-->
+<!--    	args="-file $(find scrap_descs)/desc/simpleBox.urdf -urdf -model scrap -x $(arg x) -y $(arg y) -z $(arg z)" />-->
 
   <!-- Launch controllers & moveit -->
   <include file="$(find panda_moveit_controller)/launch/main.launch" />
