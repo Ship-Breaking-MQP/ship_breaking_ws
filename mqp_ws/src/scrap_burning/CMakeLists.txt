@@ -203,8 +203,6 @@ include_directories(
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_executable(testArmMovement src/testArmMovement.cpp)
-target_link_libraries(testArmMovement ${catkin_LIBRARIES} ${Boost_LIBRARIES})
-install(TARGETS testArmMovement DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION})
-
-install(DIRECTORY launch DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION})
+catkin_install_python(PROGRAMS scripts/pcl_subscriber.py scripts/pcl_publisher.py
+        DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+        )
