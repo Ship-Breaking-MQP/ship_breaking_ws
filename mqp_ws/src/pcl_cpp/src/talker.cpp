@@ -17,6 +17,7 @@ ros::Publisher pointcloud;
 
 inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA>& in, pcl::PointCloud<pcl::PointXYZRGB>& out)
 {
+  out.header = in.header;
   out.width   = in.width;
   out.height  = in.height;
   out.points.resize(in.points.size());
@@ -55,7 +56,7 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::
 
 // build the condition
   int rMax = 255;
-  int rMin = 130;
+  int rMin = 0;
   int gMax = 0;
   int gMin = 0;
   int bMax = 0;
@@ -80,9 +81,9 @@ pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered (new pcl::PointCloud<pcl::
 
 
   sensor_msgs::PointCloud2 cloud2;
-  ROS_INFO("%s",cloud2.header.frame_id);
+//  ROS_INFO("%s",cloud2.header.frame_id.c_str());
   pcl::toROSMsg(*cloud_filtered, cloud2);
-  ROS_INFO("%s",cloud2.header.frame_id);
+//  ROS_INFO("%s",cloud2.header.frame_id.c_str());
   pub.publish (cloud2);
 
 
