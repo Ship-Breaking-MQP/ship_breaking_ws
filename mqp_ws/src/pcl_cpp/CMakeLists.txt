@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(pcl_cpp)
+set(BUILD_surface_on_nurbs 1)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
@@ -13,6 +14,11 @@ find_package(catkin REQUIRED COMPONENTS
   sensor_msgs
   pcl_ros
 )
+
+find_package( PCL REQUIRED )
+include_directories(  ${catkin_INCLUDE_DIRS}  ${PCL_INCLUDE_DIRS} )
+link_directories(${PCL_LIBRARY_DIRS})
+add_definitions(${PCL_DEFINITIONS})
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
