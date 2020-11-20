@@ -13,6 +13,7 @@
 #include <pcl/surface/on_nurbs/fitting_curve_2d_pdm.h>
 #include <pcl/surface/on_nurbs/fitting_curve_2d_tdm.h>
 #include <pcl/surface/on_nurbs/fitting_curve_2d_sdm.h>
+#include <pcl/surface/on_nurbs/fitting_curve_pdm.h>
 #include <pcl/surface/on_nurbs/triangulation.h>
 #include <pcl/surface/on_nurbs/fitting_curve_2d.h>
 #include <pcl/point_cloud.h>
@@ -88,24 +89,24 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     // convert to NURBS data structure
   pcl::on_nurbs::NurbsDataCurve data;
-//  PointCloud2Vector2d (cloud_filtered, data.interior);
-//
-//    // #################### CURVE PARAMETERS #########################
-//  unsigned order (3);
-//  unsigned n_control_points (20);
-//
-//  pcl::on_nurbs::FittingCurve2d::Parameter curve_params;
-//  curve_params.smoothness = 0.000001;
-//
-//  // #################### CURVE FITTING #########################
-//  ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA (order, data.interior, n_control_points);
-//
-//  pcl::on_nurbs::FittingCurve fit (&data, curve);
-//  fit.assemble (curve_params);
-//  fit.solve ();
-//
-//  ROS_INFO("data  %s",fit.m_data.c_str());
-//  ROS_INFO("nurbs %s",fit.m_nurbs.c_str());
+//  PointCloud2Vector2d(cloud_filtered, data.interior);
+
+    // #################### CURVE PARAMETERS #########################
+  unsigned order (3);
+  unsigned n_control_points (20);
+
+  pcl::on_nurbs::FittingCurve::Parameter curve_params;
+  curve_params.smoothness = 0.000001;
+
+  // #################### CURVE FITTING #########################
+  ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA (order, data.interior, n_control_points);
+
+  pcl::on_nurbs::FittingCurve fit (&data, curve);
+  fit.assemble(curve_params);
+  fit.solve ();
+
+//  ROS_INFO("data  %s",fit.m_data);
+//  ROS_INFO("nurbs %s",fit.m_nurbs);
 
 
 
