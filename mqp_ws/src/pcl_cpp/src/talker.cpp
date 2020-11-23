@@ -1,30 +1,19 @@
 #include <ros/ros.h>
+
 // PCL specific includes
 #include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/PointCloud.h>
-#include <pcl_ros/point_cloud.h>
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/conditional_removal.h>
 #include <string>
-#include <pcl/pcl_config.h>
-#include <pcl/surface/on_nurbs/fitting_curve_2d_pdm.h>
-#include <pcl/surface/on_nurbs/fitting_curve_2d_tdm.h>
-#include <pcl/surface/on_nurbs/fitting_curve_2d_sdm.h>
 #include <pcl/surface/on_nurbs/fitting_curve_pdm.h>
 #include <pcl/surface/on_nurbs/triangulation.h>
-#include <pcl/surface/on_nurbs/fitting_curve_2d.h>
-#include <pcl/point_cloud.h>
-#include <pcl/point_types.h>
-#include <pcl/io/pcd_io.h>
 #include <pcl/visualization/pcl_visualizer.h>
 
-
 ros::Publisher pub;
-ros::Publisher pointcloud;
-
+pcl::visualization::PCLVisualizer viewer("Curve Fitting 3D");
 
 inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
     out.header = in.header;
@@ -41,6 +30,44 @@ inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pc
     }
 }
 
+
+inline void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl::on_nurbs::vector_vec3d &data) {
+    for (const auto &p : *cloud) {
+        if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
+            data.emplace_back(p.x, p.y, p.z);
+        }
+    }
+}
+
+void
+VisualizeCurve(ON_NurbsCurve &curve, double r, double g, double b, bool show_cps) {
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+    pcl::on_nurbs::Triangulation::convertCurve2PointCloud(curve, cloud, 8);
+
+    for (std::size_t i = 0; i < cloud->size() - 1; i++) {
+        pcl::PointXYZRGB &p1 = cloud->at(i);
+        pcl::PointXYZRGB &p2 = cloud->at(i + 1);
+        std::ostringstream os;
+        os << "line_" << r << "_" << g << "_" << b << "_" << i;
+        viewer.addLine<pcl::PointXYZRGB>(p1, p2, r, g, b, os.str());
+    }
+
+    if (show_cps) {
+        pcl::PointCloud<pcl::PointXYZ>::Ptr cps(new pcl::PointCloud<pcl::PointXYZ>);
+        for (int i = 0; i < curve.CVCount(); i++) {
+            ON_3dPoint cp;
+            curve.GetCV(i, cp);
+
+            pcl::PointXYZ p;
+            p.x = float(cp.x);
+            p.y = float(cp.y);
+            p.z = float(cp.z);
+            cps->push_back(p);
+        }
+        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> handler(cps, 255 * r, 255 * g, 255 * b);
+        viewer.addPointCloud<pcl::PointXYZ>(cps, handler, "cloud_cps");
+    }
+}
 
 void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
@@ -88,27 +115,31 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
 
     // convert to NURBS data structure
-  pcl::on_nurbs::NurbsDataCurve data;
-//  PointCloud2Vector2d(cloud_filtered, data.interior);
+    pcl::on_nurbs::NurbsDataCurve data;
+    PointCloud2Vector2d(cloud_filtered, data.interior);
 
+    viewer.setSize(800, 600);
+    viewer.addPointCloud<pcl::PointXYZRGB>(cloud_filtered, "cloud_filtered");
     // #################### CURVE PARAMETERS #########################
-  unsigned order (3);
-  unsigned n_control_points (20);
+    unsigned order(3);
+    unsigned n_control_points(20);
 
-  pcl::on_nurbs::FittingCurve::Parameter curve_params;
-  curve_params.smoothness = 0.000001;
+    pcl::on_nurbs::FittingCurve::Parameter curve_params;
+    curve_params.smoothness = 0.000001;
 
-  // #################### CURVE FITTING #########################
-  ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA (order, data.interior, n_control_points);
+    // #################### CURVE FITTING #########################
+    ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA(order, data.interior, n_control_points);
 
-  pcl::on_nurbs::FittingCurve fit (&data, curve);
-  fit.assemble(curve_params);
-  fit.solve ();
+    pcl::on_nurbs::FittingCurve fit(&data, curve);
+    fit.assemble(curve_params);
+    fit.solve();
 
 //  ROS_INFO("data  %s",fit.m_data);
-//  ROS_INFO("nurbs %s",fit.m_nurbs);
+  ROS_INFO("Is valid: %d", fit.m_nurbs.IsValid());
 
-
+    // visualize
+    VisualizeCurve(fit.m_nurbs, 1.0, 0.0, 0.0, false);
+    viewer.spin();
 
     sensor_msgs::PointCloud2 cloud2;
     pcl::toROSMsg(*cloud_filtered, cloud2);
@@ -122,15 +153,13 @@ main(int argc, char **argv) {
     // Initialize ROS
     ros::init(argc, argv, "frank_camera_processing");
     ros::NodeHandle nh;
-//    ROS_INFO("PCL Version: %s", PCL_VERSION_PRETTY);
+    ROS_INFO("PCL Version: %s", PCL_VERSION_PRETTY);
 
     // Create a ROS subscriber for the input point cloud
     ros::Subscriber sub = nh.subscribe("camera/depth/points", 1, cloud_cb);
 
     // Create a ROS publisher for the output point cloud
     pub = nh.advertise<sensor_msgs::PointCloud2>("output", 1);
-
-
 
     // Spin
     ros::spin();

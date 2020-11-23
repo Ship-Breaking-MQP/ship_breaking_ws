@@ -1,22 +1,36 @@
 cmake_minimum_required(VERSION 3.0.2)
 project(pcl_cpp)
-set(BUILD_surface_on_nurbs 1)
-
+# check c++14 / c++0x
+include(CheckCXXCompilerFlag)
+CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
+CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
+if(COMPILER_SUPPORTS_CXX14)
+    set(CMAKE_CXX_FLAGS "-std=c++14")
+elseif(COMPILER_SUPPORTS_CXX0X)
+    set(CMAKE_CXX_FLAGS "-std=c++0x")
+else()
+    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
+endif()
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+set(PCL_DIR "/usr/local/share/pcl-1.8")
+find_package(PCL 1.8 REQUIRED COMPONENTS
+        common
+        io
+        surface
+        )
 find_package(catkin REQUIRED COMPONENTS
-  roscpp
-  rospy
-  sensor_msgs
-  pcl_ros
-)
-
-find_package( PCL REQUIRED )
-include_directories(  ${catkin_INCLUDE_DIRS}  ${PCL_INCLUDE_DIRS} )
+        roscpp
+        rospy
+        sensor_msgs
+        pcl_ros
+        )
+include_directories(${catkin_INCLUDE_DIRS})
+include_directories(${PCL_INCLUDE_DIRS})
 link_directories(${PCL_LIBRARY_DIRS})
 add_definitions(${PCL_DEFINITIONS})
 
@@ -110,10 +124,10 @@ add_definitions(${PCL_DEFINITIONS})
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-#  INCLUDE_DIRS include
-#  LIBRARIES pcl_cpp
-#  CATKIN_DEPENDS roscpp
-#  DEPENDS system_lib
+        #  INCLUDE_DIRS include
+        #  LIBRARIES pcl_cpp
+        #  CATKIN_DEPENDS roscpp
+        #  DEPENDS system_lib
 )
 
 ###########
@@ -123,8 +137,8 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-# include
-  ${catkin_INCLUDE_DIRS}
+        # include
+        ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
@@ -212,4 +226,4 @@ include_directories(
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
 add_executable(talker src/talker.cpp)
-target_link_libraries(talker ${catkin_LIBRARIES})
+target_link_libraries(talker ${catkin_LIBRARIES} ${PCL_LIBRARIES} libpcl_visualization.so)
