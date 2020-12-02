@@ -11,11 +11,16 @@
 #include <pcl/surface/on_nurbs/fitting_curve_pdm.h>
 #include <pcl/surface/on_nurbs/triangulation.h>
 #include <pcl/visualization/pcl_visualizer.h>
+#include <pcl-1.8/pcl/2d/morphology.h>
+#include <pcl_ros/transforms.h>
+#include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
+#include <pcl-1.8/pcl/point_types_conversion.h>
 
 ros::Publisher pub;
 pcl::visualization::PCLVisualizer viewer("Curve Fitting 3D");
 
-inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
+void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
     out.header = in.header;
     out.width = in.width;
     out.height = in.height;
@@ -31,7 +36,7 @@ inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pc
 }
 
 
-inline void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl::on_nurbs::vector_vec3d &data) {
+void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl::on_nurbs::vector_vec3d &data) {
     for (const auto &p : *cloud) {
         if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
             data.emplace_back(p.x, p.y, p.z);
@@ -39,8 +44,7 @@ inline void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr clo
     }
 }
 
-void
-VisualizeCurve(ON_NurbsCurve &curve, double r, double g, double b, bool show_cps) {
+void VisualizeCurve(ON_NurbsCurve &curve, double r, double g, double b, bool show_cps) {
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::on_nurbs::Triangulation::convertCurve2PointCloud(curve, cloud, 8);
 
@@ -85,7 +89,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
 
 // build the condition
-    int rMax = 255;
+    int rMax = 60;
     int rMin = 0;
     int gMax = 30;
     int gMin = 0;
@@ -112,55 +116,84 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     // apply filter
     condrem.filter(*cloud_filtered);
 
+//    sensor_msgs::PointCloud2 cloud2;
+//    pcl::toROSMsg(*cloud_filtered, cloud2);
+//    pub.publish(cloud2);
 
+    // #################### ERODE CLOUD ############################
+//    pcl::PointCloud<pcl::PointXYZI>::Ptr iCloud (new pcl::PointCloud<pcl::PointXYZI>);
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr output_cloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr elementStructureCloud (new pcl::PointCloud<pcl::PointXYZRGB>);
+//    pcl::PointCloudXYZRGBtoXYZI(*cloud_filtered, *iCloud);
+//    pcl::Morphology<pcl::PointXYZRGB> morphology;
+//    pcl::Morphology<pcl::PointXYZI> morph;
+//    morphology.operator_type = pcl::Morphology<pcl::PointXYZRGB>::OPENING_BINARY;
+//    morphology.setInputCloud(cloud_filtered);
+//    morphology.applyMorphologicalOperation(*output_cloud);
+//    morph.setInputCloud(iCloud);
+//    morph.openingBinary(*iCloud);
+
+    // Transform to world
+    ros::Time now = ros::Time::now();
+    tf::TransformListener listener;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+    tf::StampedTransform transform;
+    try {
+        listener.waitForTransform("/panda_link0", "/camera_link",
+                                  now, ros::Duration(3.0));
+        listener.lookupTransform("/panda_link0", "/camera_link",
+                                 ros::Time(0), transform);
+        pcl_ros::transformPointCloud("/world", *cloud_filtered, *world_filtered, listener);
+    } catch (tf::TransformException ex) {
+        ROS_ERROR("Unable to perform Look up error: %s", ex.what());
+        ros::Duration(1.0).sleep();
+    }
+
+//    for (int i = 0; i<10; i++) {
+//        ROS_INFO("Point %d of cloud filtered X: %f", i, cloud_filtered->points[i].x);
+//        ROS_INFO("Point %d of cloud filtered Y: %f", i, cloud_filtered->points[i].y);
+//        ROS_INFO("Point %d of cloud filtered Z: %f", i, cloud_filtered->points[i].z);
+//        ROS_INFO("Point %d of world filtered X: %f", i, world_filtered->points[i].x);
+//        ROS_INFO("Point %d of world filtered Y: %f", i, world_filtered->points[i].y);
+//        ROS_INFO("Point %d of world filtered Z: %f", i, world_filtered->points[i].z);
+//    }
 
     // convert to NURBS data structure
     pcl::on_nurbs::NurbsDataCurve data;
-    PointCloud2Vector2d(cloud_filtered, data.interior);
+    PointCloud2Vector2d(world_filtered, data.interior);
 
-    viewer.setSize(800, 600);
-    viewer.addPointCloud<pcl::PointXYZRGB>(cloud_filtered, "cloud_filtered");
+    viewer.setSize(1200, 1000);
+    viewer.addPointCloud<pcl::PointXYZRGB>(world_filtered, "world_filtered");
     // #################### CURVE PARAMETERS #########################
     unsigned order(3);
-    unsigned n_control_points(20);
+    unsigned n_control_points(200);
 
     pcl::on_nurbs::FittingCurve::Parameter curve_params;
-    curve_params.smoothness = 0.000001;
-
+    curve_params.smoothness = 5;
     // #################### CURVE FITTING #########################
     ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA(order, data.interior, n_control_points);
 
     pcl::on_nurbs::FittingCurve fit(&data, curve);
     fit.assemble(curve_params);
     fit.solve();
-
-//  ROS_INFO("data  %s",fit.m_data);
-  ROS_INFO("Is valid: %d", fit.m_nurbs.IsValid());
+    fit.refine();
 
     // visualize
-    VisualizeCurve(fit.m_nurbs, 1.0, 0.0, 0.0, false);
+    VisualizeCurve(fit.m_nurbs, 0.0, 0.0, 1.0, false);
     viewer.spin();
-
-    sensor_msgs::PointCloud2 cloud2;
-    pcl::toROSMsg(*cloud_filtered, cloud2);
-    pub.publish(cloud2);
-
-
 }
 
-int
-main(int argc, char **argv) {
+int main(int argc, char **argv) {
     // Initialize ROS
     ros::init(argc, argv, "frank_camera_processing");
     ros::NodeHandle nh;
     ROS_INFO("PCL Version: %s", PCL_VERSION_PRETTY);
 
-    // Create a ROS subscriber for the input point cloud
-    ros::Subscriber sub = nh.subscribe("camera/depth/points", 1, cloud_cb);
-
     // Create a ROS publisher for the output point cloud
     pub = nh.advertise<sensor_msgs::PointCloud2>("output", 1);
 
+    // Create a ROS subscriber for the input point cloud
+    ros::Subscriber sub = nh.subscribe("camera/depth/points", 1, cloud_cb);
     // Spin
     ros::spin();
 }
