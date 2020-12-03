@@ -1,12 +1,14 @@
 #!/usr/bin/env python
 import rospy
 from geometry_msgs.msg import PoseStamped, Pose
+from nav_msgs.msg import Path
 
 
 def talker():
-    pub = rospy.Publisher('pcl', PoseStamped, queue_size=10)
-    rospy.init_node('talker', anonymous=True)
+    pub = rospy.Publisher('pcl', Path, queue_size=10)
+    rospy.init_node('pcl_publisher', anonymous=True)
     rate = rospy.Rate(10)  # 10hz
+    path = Path()
     start_pose_stamped = PoseStamped()
     start_pose_stamped.header.frame_id = "start"
     start_pose = Pose()
@@ -18,8 +20,7 @@ def talker():
     start_pose.orientation.x = 0.5
     start_pose.orientation.w = 0.5
     start_pose_stamped.pose = start_pose
-    pub.publish(start_pose_stamped)
-    rate.sleep()
+    path.poses.append(start_pose_stamped)
     for i in range(9):
         new_pose = Pose()
         new_pose.position.x = 0.5
@@ -30,11 +31,10 @@ def talker():
         new_pose.orientation.x = 0.5
         new_pose.orientation.w = 0.5
         pose_stamped = PoseStamped()
+        pose_stamped.header.frame_id = "middle"
         pose_stamped.pose = new_pose
-        pose_stamped.header.frame_id = "not end"
         rospy.loginfo(pose_stamped.pose)
-        pub.publish(pose_stamped)
-        rate.sleep()
+        path.poses.append(pose_stamped)
     end_pose = Pose()
     end_pose.position.x = 0.5
     end_pose.position.y = 0.6
@@ -43,11 +43,11 @@ def talker():
     end_pose.orientation.y = 0.5
     end_pose.orientation.x = 0.5
     end_pose.orientation.w = 0.5
-    pose_stamped = PoseStamped()
-    pose_stamped.pose = end_pose
-    pose_stamped.header.frame_id = "end"
-    rospy.loginfo(pose_stamped.pose)
-    pub.publish(pose_stamped)
+    end_pose_stamped = PoseStamped()
+    end_pose_stamped.pose = end_pose
+    rospy.loginfo(end_pose_stamped.pose)
+    path.poses.append(end_pose_stamped)
+    pub.publish(path)
 
 
 if __name__ == '__main__':

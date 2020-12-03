@@ -3,7 +3,7 @@ import sys
 
 import moveit_commander
 import rospy
-from geometry_msgs.msg import PoseStamped
+from nav_msgs.msg import Path
 
 trajectory_array = []
 
@@ -52,19 +52,17 @@ class PclSubscriber(object):
 
     def callback(self, data):
         global trajectory_array
-        rospy.loginfo("The pose is %s", data.pose)
-        rospy.loginfo("The header is %s", data.header)
-        if data.header.frame_id == "start":
-            trajectory_array = [data.pose]
-        elif data.header.frame_id == "end":
-            trajectory_array.append(data.pose)
-            (plan, fraction) = self.plan_cartesian_path(waypoints=trajectory_array)
-            self.execute_plan(plan)
-        else:
-            trajectory_array.append(data.pose)
+        rospy.loginfo("Received path: %s", data)
+        rospy.loginfo("Received %d points", len(data.poses))
+        for i in data.poses:
+            trajectory_array.append(i.pose)
+        (plan, fraction) = self.plan_cartesian_path(waypoints=trajectory_array)
+
+        rospy.loginfo("Received plan")
+        self.execute_plan(plan)
 
     def listener(self):
-        rospy.Subscriber("pcl", PoseStamped, self.callback)
+        rospy.Subscriber("pcl", Path, self.callback)
 
         rospy.spin()
 
