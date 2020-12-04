@@ -45,9 +45,9 @@ void createPoses(pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered, geometry
     for (const auto &p: curve_filtered->points) {
         if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
             geometry_msgs::Pose new_pose;
-            new_pose.position.x = p.x*(-1);
+            new_pose.position.x = p.z;
             new_pose.position.y = p.y;
-            new_pose.position.z = p.z-1;
+            new_pose.position.z = p.x + 1;
             new_pose.orientation.w = 0.5;
             new_pose.orientation.x = 0.5;
             new_pose.orientation.y = 0.5;
@@ -155,6 +155,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     sensor_msgs::PointCloud2 cloud2;
     pcl::toROSMsg(*cloud_filtered, cloud2);
+    cloud2.header.frame_id = "/world";
     pub.publish(cloud2);
 
     // Transform to world
