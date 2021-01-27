@@ -209,11 +209,11 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 //    viewer.addPointCloud<pcl::PointXYZRGB>(world_filtered, "world_filtered");
     // #################### CURVE PARAMETERS #########################
     unsigned order(3);
-    unsigned refinement(5);
-    unsigned n_control_points(200);
+    unsigned refinement(4);
+    unsigned n_control_points(20);
 
     pcl::on_nurbs::FittingCurve::Parameter curve_params;
-    curve_params.smoothness = 5;
+    curve_params.smoothness = 0.000001;
     // #################### CURVE FITTING #########################
     ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA(order, data.interior, n_control_points);
 
@@ -225,24 +225,40 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     for (unsigned i = 0; i < refinement; i++) {
         ROS_INFO("Fit Refinement number: %d", i);
         fit.refine();
+        ROS_INFO("Assemble");
         fit.assemble(curve_params);
+        ROS_INFO("Solve");
         fit.solve();
+        unsigned resolution(10);
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+        pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
+        ROS_INFO("Filter Curve");
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+        FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
+        nav_msgs::Path path;
+        int size = world_curve_filtered->points.size();
+        ROS_INFO("Create Poses");
+        geometry_msgs::Pose poses[size];
+        createPoses(world_curve_filtered, poses);
+        ROS_INFO("Create Path");
+        createPath(path, poses, size);
+        publishPclPath(path);
     }
 
-    unsigned resolution(10);
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-    pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
-    ROS_INFO("Filter Curve");
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-    FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
-    nav_msgs::Path path;
-    int size = world_curve_filtered->points.size();
-    ROS_INFO("Create Poses");
-    geometry_msgs::Pose poses[size];
-    createPoses(world_curve_filtered, poses);
-    ROS_INFO("Create Path");
-    createPath(path, poses, size);
-    publishPclPath(path);
+//    unsigned resolution(10);
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+//    pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
+//    ROS_INFO("Filter Curve");
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+//    FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
+//    nav_msgs::Path path;
+//    int size = world_curve_filtered->points.size();
+//    ROS_INFO("Create Poses");
+//    geometry_msgs::Pose poses[size];
+//    createPoses(world_curve_filtered, poses);
+//    ROS_INFO("Create Path");
+//    createPath(path, poses, size);
+//    publishPclPath(path);
 
     // visualize
 //    VisualizeCurve(fit.m_nurbs, 0.0, 0.0, 1.0, false);
