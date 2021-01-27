@@ -3,14 +3,15 @@
   <link name="world" />
 
   <link name="scrap_body">
+    <parent link="fixed" />
     <visual>
       <geometry>
-	<mesh filename="package://scrap_descs/desc/mesh/simpleBox.dae" />
+	<mesh filename="package://scrap_descs/desc/mesh/square.dae" />
       </geometry>
     </visual>
     <collision>
       <geometry>
-	<mesh filename="package://scrap_descs/desc/mesh/simpleBox.dae" />
+	<mesh filename="package://scrap_descs/desc/mesh/square.dae" />
       </geometry>
     </collision>
     <inertial>

@@ -3,6 +3,7 @@
   <link name="world" />
 
   <link name="scrap_body">
+    <parent link="fixed" />
     <visual>
       <geometry>
 	<mesh filename="package://scrap_descs/desc/mesh/simpleCylinder.dae" />
