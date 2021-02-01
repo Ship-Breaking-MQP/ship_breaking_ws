@@ -1,38 +1,15 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(pcl_cpp)
-# check c++14 / c++0x
-include(CheckCXXCompilerFlag)
-CHECK_CXX_COMPILER_FLAG("-std=c++14" COMPILER_SUPPORTS_CXX14)
-CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-if(COMPILER_SUPPORTS_CXX14)
-    set(CMAKE_CXX_FLAGS "-std=c++14")
-elseif(COMPILER_SUPPORTS_CXX0X)
-    set(CMAKE_CXX_FLAGS "-std=c++0x")
-else()
-    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++14 support. Please use a different C++ compiler.")
-endif()
+project(test)
+
 ## Compile as C++11, supported in ROS Kinetic and newer
 # add_compile_options(-std=c++11)
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-set(PCL_DIR "/usr/local/share/pcl-1.8")
-find_package(PCL 1.8 REQUIRED COMPONENTS
-        common
-        io
-        surface
-        )
 find_package(catkin REQUIRED COMPONENTS
-        roscpp
-        rospy
-        sensor_msgs
-        pcl_ros
-        )
-include_directories(${catkin_INCLUDE_DIRS})
-include_directories(${PCL_INCLUDE_DIRS})
-link_directories(${PCL_LIBRARY_DIRS})
-add_definitions(${PCL_DEFINITIONS})
+  rospy
+)
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
@@ -124,10 +101,10 @@ add_definitions(${PCL_DEFINITIONS})
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-        #  INCLUDE_DIRS include
-        #  LIBRARIES pcl_cpp
-        #  CATKIN_DEPENDS roscpp
-        #  DEPENDS system_lib
+#  INCLUDE_DIRS include
+#  LIBRARIES test
+#  CATKIN_DEPENDS rospy
+#  DEPENDS system_lib
 )
 
 ###########
@@ -137,13 +114,13 @@ catkin_package(
 ## Specify additional locations of header files
 ## Your package locations should be listed before other locations
 include_directories(
-        # include
-        ${catkin_INCLUDE_DIRS}
+# include
+  ${catkin_INCLUDE_DIRS}
 )
 
 ## Declare a C++ library
 # add_library(${PROJECT_NAME}
-#   src/${PROJECT_NAME}/pcl_cpp.cpp
+#   src/${PROJECT_NAME}/test.cpp
 # )
 
 ## Add cmake target dependencies of the library
@@ -154,7 +131,7 @@ include_directories(
 ## Declare a C++ executable
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
-# add_executable(${PROJECT_NAME}_node src/pcl_cpp_node.cpp)
+# add_executable(${PROJECT_NAME}_node src/test_node.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -218,12 +195,10 @@ include_directories(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_pcl_cpp.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_test.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()
 
 ## Add folders to be run by python nosetests
 # catkin_add_nosetests(test)
-add_executable(talker src/talker.cpp)
-target_link_libraries(talker ${catkin_LIBRARIES} ${PCL_LIBRARIES} libpcl_visualization.so)

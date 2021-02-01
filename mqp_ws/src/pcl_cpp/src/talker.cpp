@@ -1,20 +1,79 @@
 #include <ros/ros.h>
-// PCL specific includes
+#include <string>
+
 #include <sensor_msgs/PointCloud2.h>
-#include <sensor_msgs/PointCloud.h>
-#include <pcl_ros/point_cloud.h>
+#include <geometry_msgs/Pose.h>
+#include <geometry_msgs/PoseStamped.h>
+#include <nav_msgs/Path.h>
+#include <iostream>
+
+// PCL specific includes
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl/filters/voxel_grid.h>
-#include <pcl/filters/conditional_removal.h>
-#include <string>
+#include <pcl-1.8/pcl/filters/voxel_grid.h>
+#include <pcl-1.8/pcl/filters/conditional_removal.h>
+#include <pcl-1.8/pcl/surface/on_nurbs/fitting_curve_pdm.h>
+#include <pcl-1.8/pcl/surface/on_nurbs/triangulation.h>
+#include <pcl-1.8/pcl/visualization/pcl_visualizer.h>
+#include <pcl-1.8/pcl/2d/morphology.h>
+
+#include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
 
 ros::Publisher pub;
-ros::Publisher pointcloud;
+ros::Publisher pcl_pub;
+//pcl::visualization::PCLVisualizer viewer("Curve Fitting 3D");
 
+void publishPclPath(nav_msgs::Path path) {
+    ROS_INFO("Publish Path");
+    pcl_pub.publish(path);
+}
 
-inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
+void createPath(nav_msgs::Path &path, geometry_msgs::Pose poses[], int size) {
+    for (unsigned i = 0; i<size; i++) {
+        geometry_msgs::PoseStamped poseStamped;
+        poseStamped.pose = poses[i];
+        poseStamped.header.frame_id = "/world";
+        path.poses.push_back(poseStamped);
+    }
+    path.header.frame_id="/world";
+}
+
+void flipFiltered(pcl::PointCloud<pcl::PointXYZRGB> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
+    out.header = in.header;
+    out.width = in.width;
+    out.height = in.height;
+    out.points.resize(in.points.size());
+    for (size_t i = 0; i < in.points.size(); i++) {
+        out.points[i].x = in.points[i].z;
+        out.points[i].y = in.points[i].y;
+        out.points[i].z = in.points[i].x*(-1);
+        out.points[i].r = in.points[i].r;
+        out.points[i].g = in.points[i].g;
+        out.points[i].b = in.points[i].b;
+    }
+}
+
+void createPoses(pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered, geometry_msgs::Pose *poses) {
+    int counter = 0;
+    for (const auto &p: curve_filtered->points) {
+        if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
+            geometry_msgs::Pose new_pose;
+            new_pose.position.x = p.z;
+            new_pose.position.y = p.y;
+            new_pose.position.z = p.x*(-1);
+            new_pose.orientation.w = 0.5;
+            new_pose.orientation.x = 0.5;
+            new_pose.orientation.y = 0.5;
+            new_pose.orientation.z = 0.5;
+            poses[counter] = new_pose;
+            counter++;
+        }
+    }
+}
+
+void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
     out.header = in.header;
     out.width = in.width;
     out.height = in.height;
@@ -29,6 +88,55 @@ inline void PointCloudXYZRGBAtoXYZRGB(pcl::PointCloud<pcl::PointXYZRGBA> &in, pc
     }
 }
 
+void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl::on_nurbs::vector_vec3d &data) {
+    for (const auto &p : *cloud) {
+        if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
+            data.emplace_back(p.x, p.y, p.z);
+        }
+    }
+}
+
+void FilterCloudFromCurve(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::PointCloud<pcl::PointXYZRGB> &out, const ON_NurbsCurve& curve) {
+    out.header = in->header;
+    out.width = in->width;
+    out.height = in->height;
+    for (const auto &p : *in) {
+        if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
+            if (pcl::on_nurbs::Triangulation::isInside(curve, pcl::PointXYZ(p.x, p.y, p.z))) {
+                out.points.push_back(p);
+            }
+        }
+    }
+}
+
+//void VisualizeCurve(ON_NurbsCurve &curve, double r, double g, double b, bool show_cps) {
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+//    pcl::on_nurbs::Triangulation::convertCurve2PointCloud(curve, cloud, 8);
+//
+//    for (std::size_t i = 0; i < cloud->size() - 1; i++) {
+//        pcl::PointXYZRGB &p1 = cloud->at(i);
+//        pcl::PointXYZRGB &p2 = cloud->at(i + 1);
+//        std::ostringstream os;
+//        os << "line_" << r << "_" << g << "_" << b << "_" << i;
+//        viewer.addLine<pcl::PointXYZRGB>(p1, p2, r, g, b, os.str());
+//    }
+//
+//    if (show_cps) {out
+//        pcl::PointCloud<pcl::PointXYZ>::Ptr cps(new pcl::PointCloud<pcl::PointXYZ>);
+//        for (int i = 0; i < curve.CVCount(); i++) {
+//            ON_3dPoint cp;
+//            curve.GetCV(i, cp);
+//
+//            pcl::PointXYZ p;
+//            p.x = float(cp.x);
+//            p.y = float(cp.y);
+//            p.z = float(cp.z);
+//            cps->push_back(p);
+//        }
+//        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> handler(cps, 255 * r, 255 * g, 255 * b);
+//        viewer.addPointCloud<pcl::PointXYZ>(cps, handler, "cloud_cps");
+//    }
+//}
 
 void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
@@ -42,15 +150,13 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     PointCloudXYZRGBAtoXYZRGB(temp_cloud, *cloud);
 
-    // for(int i = 0;i < temp_cloud.points.size();i++){
-    //  ROS_INFO("Point %d %d\n",i,temp_cloud.points[i].r);
-    // }
-
 // create object to store filtered pontcloud
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
 
+
+    ROS_INFO("Build Condition");
 // build the condition
-    int rMax = 255;
+    int rMax = 60;
     int rMin = 0;
     int gMax = 30;
     int gMin = 0;
@@ -70,122 +176,95 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     color_cond->addComparison(pcl::PackedRGBComparison<pcl::PointXYZRGB>::Ptr(
             new pcl::PackedRGBComparison<pcl::PointXYZRGB>("b", pcl::ComparisonOps::GT, bMin)));
 
-    // for(int i = 0;i < temp_cloud.points.size();i++){
-    //  ROS_INFO("Point %d %d\n",i,temp_cloud.points[i].r);
-    // }
     // build the filter
     pcl::ConditionalRemoval<pcl::PointXYZRGB> condrem(color_cond);
     condrem.setInputCloud(cloud);
     condrem.setKeepOrganized(true);
     // apply filter
+    ROS_INFO("Apply Filter");
     condrem.filter(*cloud_filtered);
-//    for (int i = 0; i < cloud_filtered->points.size(); i++) {
-//        ROS_INFO("Point %d R: %d\n", i, temp_cloud.points[i].r);
-//        ROS_INFO("Point %d G: %d\n", i, temp_cloud.points[i].g);
-//        ROS_INFO("Point %d B: %d\n", i, temp_cloud.points[i].b);
-//    }
 
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr flipped_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     sensor_msgs::PointCloud2 cloud2;
-//  ROS_INFO("%s",cloud2.header.frame_id.c_str());
-    pcl::toROSMsg(*cloud_filtered, cloud2);
-//  ROS_INFO("%s",cloud2.header.frame_id.c_str());
+    flipFiltered(*cloud_filtered, *flipped_cloud);
+    pcl::toROSMsg(*flipped_cloud, cloud2);
+    cloud2.header.frame_id = "/world";
+
+    ROS_INFO("Publish Cloud");
     pub.publish(cloud2);
 
+    // Transform to world
+    ros::Time now = ros::Time::now();
+    tf::TransformListener listener;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+    world_filtered = cloud_filtered;
+    tf::StampedTransform transform;
+
+    // convert to NURBS data structure
+    pcl::on_nurbs::NurbsDataCurve data;
+    PointCloud2Vector2d(world_filtered, data.interior);
 
 
+    ROS_INFO("Downsample Curve");
+    pcl::on_nurbs::NurbsTools::downsample_random(data.interior, 500);
+
+//    viewer.setSize(1200, 1000);
+//    viewer.addPointCloud<pcl::PointXYZRGB>(world_filtered, "world_filtered");
+    // #################### CURVE PARAMETERS #########################
+    unsigned order(3);
+    unsigned refinement(4);
+    unsigned n_control_points(20);
+
+    pcl::on_nurbs::FittingCurve::Parameter curve_params;
+    curve_params.smoothness = 0.001;
+    // #################### CURVE FITTING #########################
+    ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA(order, data.interior, n_control_points);
 
 
+    pcl::on_nurbs::FittingCurve fit(&data, curve);
+    ROS_INFO("Fit Refinement");
+    for (unsigned i = 0; i < refinement; i++) {
+        ROS_INFO("Press enter to continue...");
+        getchar();
+        ROS_INFO("Fit Refinement number: %d", i);
+        fit.refine();
+        ROS_INFO("Assemble");
+        fit.assemble(curve_params);
+        ROS_INFO("Solve");
+        fit.solve();
+        unsigned resolution(10);
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+        pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
+        ROS_INFO("Filter Curve");
+        pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+        FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
+        nav_msgs::Path path;
+        int size = world_curve_filtered->points.size();
+        ROS_INFO("Create Poses");
+        geometry_msgs::Pose poses[size];
+        createPoses(world_curve_filtered, poses);
+        ROS_INFO("Create Path");
+        createPath(path, poses, size);
+        publishPclPath(path);
+    }
 
-    // // Container for original & filtered data
-    // pcl::PCLPointCloud2* cloud = new pcl::PCLPointCloud2;
-    // pcl::PCLPointCloud2ConstPtr cloudPtr(cloud);
-    // pcl::PCLPointCloud2 cloud_filtered;
-    // // Convert to PCL data type
-    // pcl_conversions::toPCL(*cloud_msg, *cloud);
-    // for(int i = 0;i < cloud->data.size();i++){
-    // ROS_INFO("Point %d %d\n",i,cloud->data[i]);
-    // }
-
-
-    // // Perform the actual filtering
-    // pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
-    // sor.setInputCloud (cloudPtr);
-    // sor.setLeafSize (0.1, 0.1, 0.1);
-    // sor.filter (cloud_filtered);
-
-    // // Convert to ROS data type
-    // sensor_msgs::PointCloud2 output;
-    // pcl_conversions::fromPCL(cloud_filtered, output);
-
-    // Publish the data
-
-
-    /*
-
-
-   pcl::PointCloud<pcl::PointXYZRGB>::Ptr rgb_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-   pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-   pcl::fromROSMsg(*cloud_msg, *rgb_cloud);
-   pcl::PCLPointCloud2 cloud_filtered_ros;
-
-   pcl::ConditionalRemoval<pcl::PointXYZRGB> color_filter;
-
-   pcl::PackedRGBComparison<pcl::PointXYZRGB>::Ptr
-       red_condition(new pcl::PackedRGBComparison<pcl::PointXYZRGB>("r", pcl::ComparisonOps::GT, 200));
-   pcl::ConditionAnd<pcl::PointXYZRGB>::Ptr color_cond (new pcl::ConditionAnd<pcl::PointXYZRGB> ());
-   color_cond->addComparison (red_condition);
-
-   // Build the filter
-   color_filter.setInputCloud(rgb_cloud);
-   color_filter.setCondition (color_cond);
-   color_filter.filter(*cloud_filtered);
-
-    sensor_msgs::PointCloud2 pc2;
-    pcl::PCLPointCloud2::Ptr pcl_pc_2(new pcl::PCLPointCloud2());
-    pcl::toPCLPointCloud2 (*cloud_filtered, *pcl_pc_2);
-    pcl_conversions::fromPCL( *pcl_pc_2, pc2 );
-    pub.publish(pc2);
-
-
-  */
-    /*
-    // Container for original & filtered data
-    pcl::PCLPointCloud2* cloud = new pcl::;
-    pcl::PCLPointCloud2ConstPtr cloudPtr(cloud);
-    pcl::PCLPointCloud2 cloud_filtered;
-
-    // Convert to PCL data type
-    pcl_conversions::toPCL(*cloud_msg, *cloud);
-  PCLPointCloud2
-    // Perform the actual filtering
-    pcl::VoxelGrid<pcl::PCLPointCloud2> sor;
-    sor.setInputCloud (cloudPtr);
-    sor.setLeafSize (0.01, 0.01, 0.01);
-    sor.filter (cloud_filtered);
-
-    // Convert to ROS data type
-
-
-    // Publish the data
-    pub.publish (output);
-    */
+//     visualize
+//    VisualizeCurve(fit.m_nurbs, 0.0, 0.0, 1.0, false);
+//    viewer.spin();
 }
 
 int main(int argc, char **argv) {
     // Initialize ROS
     ros::init(argc, argv, "frank_camera_processing");
     ros::NodeHandle nh;
-
+    ROS_INFO("PCL Version: %s", PCL_VERSION_PRETTY);
 
     // Create a ROS publisher for the output point cloud
     pub = nh.advertise<sensor_msgs::PointCloud2>("output", 1);
-
+    pcl_pub = nh.advertise<nav_msgs::Path>("pcl", 1);
+    ros::Rate loop_rate(10);
     // Create a ROS subscriber for the input point cloud
     ros::Subscriber sub = nh.subscribe("camera/depth/points", 1, cloud_cb);
-
-
-
-
     // Spin
     ros::spin();
 }
