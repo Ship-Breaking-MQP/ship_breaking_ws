@@ -45,7 +45,7 @@
     </library_effects>
     <library_images>
        <image id="Painted_png" name="Painted_png">
-            <init_from>Painted.png</init_from>
+            <init_from>squiggle.png</init_from>
        </image>
     </library_images>
     <library_geometries>

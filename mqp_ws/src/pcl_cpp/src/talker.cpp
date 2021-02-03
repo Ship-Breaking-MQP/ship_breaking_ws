@@ -23,7 +23,6 @@
 
 ros::Publisher pub;
 ros::Publisher pcl_pub;
-//pcl::visualization::PCLVisualizer viewer("Curve Fitting 3D");
 
 void publishPclPath(nav_msgs::Path path) {
     ROS_INFO("Publish Path");
@@ -109,34 +108,29 @@ void FilterCloudFromCurve(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl:
     }
 }
 
-//void VisualizeCurve(ON_NurbsCurve &curve, double r, double g, double b, bool show_cps) {
-//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
-//    pcl::on_nurbs::Triangulation::convertCurve2PointCloud(curve, cloud, 8);
-//
-//    for (std::size_t i = 0; i < cloud->size() - 1; i++) {
-//        pcl::PointXYZRGB &p1 = cloud->at(i);
-//        pcl::PointXYZRGB &p2 = cloud->at(i + 1);
-//        std::ostringstream os;
-//        os << "line_" << r << "_" << g << "_" << b << "_" << i;
-//        viewer.addLine<pcl::PointXYZRGB>(p1, p2, r, g, b, os.str());
-//    }
-//
-//    if (show_cps) {out
-//        pcl::PointCloud<pcl::PointXYZ>::Ptr cps(new pcl::PointCloud<pcl::PointXYZ>);
-//        for (int i = 0; i < curve.CVCount(); i++) {
-//            ON_3dPoint cp;
-//            curve.GetCV(i, cp);
-//
-//            pcl::PointXYZ p;
-//            p.x = float(cp.x);
-//            p.y = float(cp.y);
-//            p.z = float(cp.z);
-//            cps->push_back(p);
-//        }
-//        pcl::visualization::PointCloudColorHandlerCustom<pcl::PointXYZ> handler(cps, 255 * r, 255 * g, 255 * b);
-//        viewer.addPointCloud<pcl::PointXYZ>(cps, handler, "cloud_cps");
-//    }
-//}
+void downsampleFromCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
+    out.header = in->header;
+    out.width = in->width;
+    out.height = in->height;
+    for (int i=0; i < in->points.size(); i++) {
+        if (i == 0 || i % 100 == 0 || i == in->points.size()-1) {
+            out.points.push_back(in->points[i]);
+        }
+    }
+}
+
+void averageFromCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
+    out.header = in->header;
+    out.width = in->width;
+    out.height = in->height;
+    for (int i=0; i < in->points.size()-2; i++) {
+        pcl::PointXYZRGB point = in->points[i];
+        point.x = (in->points[i].x+in->points[i+1].x+in->points[i+2].x)/3;
+        point.y = (in->points[i].y+in->points[i+1].y+in->points[i+2].y)/3;
+        point.z = (in->points[i].z+in->points[i+1].z+in->points[i+2].z)/3;
+        out.points.push_back(point);
+    }
+}
 
 void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
@@ -208,15 +202,13 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     ROS_INFO("Downsample Curve");
     pcl::on_nurbs::NurbsTools::downsample_random(data.interior, 500);
 
-//    viewer.setSize(1200, 1000);
-//    viewer.addPointCloud<pcl::PointXYZRGB>(world_filtered, "world_filtered");
     // #################### CURVE PARAMETERS #########################
     unsigned order(3);
     unsigned refinement(4);
     unsigned n_control_points(20);
 
     pcl::on_nurbs::FittingCurve::Parameter curve_params;
-    curve_params.smoothness = 0.001;
+    curve_params.smoothness = 5;
     // #################### CURVE FITTING #########################
     ON_NurbsCurve curve = pcl::on_nurbs::FittingCurve::initNurbsCurvePCA(order, data.interior, n_control_points);
 
@@ -224,33 +216,36 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     pcl::on_nurbs::FittingCurve fit(&data, curve);
     ROS_INFO("Fit Refinement");
     for (unsigned i = 0; i < refinement; i++) {
-        ROS_INFO("Press enter to continue...");
-        getchar();
-        ROS_INFO("Fit Refinement number: %d", i);
+        ROS_INFO("Fit Refinement");
         fit.refine();
         ROS_INFO("Assemble");
         fit.assemble(curve_params);
         ROS_INFO("Solve");
         fit.solve();
-        unsigned resolution(10);
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-        pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
-        ROS_INFO("Filter Curve");
-        pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-        FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
-        nav_msgs::Path path;
-        int size = world_curve_filtered->points.size();
-        ROS_INFO("Create Poses");
-        geometry_msgs::Pose poses[size];
-        createPoses(world_curve_filtered, poses);
-        ROS_INFO("Create Path");
-        createPath(path, poses, size);
-        publishPclPath(path);
     }
 
-//     visualize
-//    VisualizeCurve(fit.m_nurbs, 0.0, 0.0, 1.0, false);
-//    viewer.spin();
+    ROS_INFO("Press enter to continue...");
+    getchar();
+    unsigned resolution(10);
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+    pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
+    ROS_INFO("Filter Curve");
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+    FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
+    nav_msgs::Path path;
+    ROS_INFO("Down sample Cloud");
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_down_sampled(new pcl::PointCloud<pcl::PointXYZRGB>);
+    downsampleFromCloud(world_curve_filtered, *world_down_sampled);
+    ROS_INFO("Average CLoud");
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_average(new pcl::PointCloud<pcl::PointXYZRGB>);
+    averageFromCloud(world_down_sampled, *world_average);
+    int size = world_average->points.size();
+    ROS_INFO("Create Poses");
+    geometry_msgs::Pose poses[size];
+    createPoses(world_average, poses);
+    ROS_INFO("Create Path");
+    createPath(path, poses, size);
+    publishPclPath(path);
 }
 
 int main(int argc, char **argv) {
