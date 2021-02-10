@@ -135,6 +135,8 @@ void averageFromCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::Poi
 void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
 // load rod type point cloud and convert to pcl::PointCloud<pcl::PointXYZRGB>
+    ROS_INFO("Press enter to continue...");
+    getchar();
     pcl::PCLPointCloud2 pcl_pc2;
 
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -216,22 +218,23 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     pcl::on_nurbs::FittingCurve fit(&data, curve);
     ROS_INFO("Fit Refinement");
     for (unsigned i = 0; i < refinement; i++) {
-        ROS_INFO("Fit Refinement");
         fit.refine();
-        ROS_INFO("Assemble");
         fit.assemble(curve_params);
-        ROS_INFO("Solve");
         fit.solve();
     }
 
-    ROS_INFO("Press enter to continue...");
-    getchar();
-    unsigned resolution(10);
+    unsigned resolution(1);
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
     pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
     ROS_INFO("Filter Curve");
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
     FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
+    ///////
+    sensor_msgs::PointCloud2 cloudTest;
+    pcl::toROSMsg(*world_curve_filtered, cloudTest);
+    cloudTest.header.frame_id = "/world";
+    pub.publish(cloudTest);
+    //////
     nav_msgs::Path path;
     ROS_INFO("Down sample Cloud");
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_down_sampled(new pcl::PointCloud<pcl::PointXYZRGB>);
@@ -239,10 +242,10 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     ROS_INFO("Average CLoud");
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_average(new pcl::PointCloud<pcl::PointXYZRGB>);
     averageFromCloud(world_down_sampled, *world_average);
-    int size = world_average->points.size();
+    int size = world_curve_filtered->points.size();
     ROS_INFO("Create Poses");
     geometry_msgs::Pose poses[size];
-    createPoses(world_average, poses);
+    createPoses(world_curve_filtered, poses);
     ROS_INFO("Create Path");
     createPath(path, poses, size);
     publishPclPath(path);

@@ -1,9 +1,9 @@
 <launch>
   <!-- Scrap spawning arguments -->
   <arg name="scrap_name" default="simpleBox" />
-  <arg name="x" default="2" />
+  <arg name="x" default="1.5" />
   <arg name="y" default="0" />
-  <arg name="z" default="1" />
+  <arg name="z" default="0.3" />
 
   <param name="robot_description" command="$(find xacro)/xacro --inorder $(find franka_description)/robots/franka_camera.xacro" />
   <param name="scrap_description" textfile="$(find scrap_descs)/desc/$(arg scrap_name).urdf" />

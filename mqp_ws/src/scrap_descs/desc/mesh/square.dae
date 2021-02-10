@@ -106,7 +106,7 @@
   </library_effects>
   <library_images>
     <image id="squiggle_png" name="squiggle_png">
-      <init_from>circle.png</init_from>
+      <init_from>square.png</init_from>
     </image>
   </library_images>
   <library_materials>
