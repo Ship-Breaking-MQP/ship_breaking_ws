@@ -15,8 +15,8 @@
 #include <pcl-1.8/pcl/filters/conditional_removal.h>
 #include <pcl-1.8/pcl/surface/on_nurbs/fitting_curve_pdm.h>
 #include <pcl-1.8/pcl/surface/on_nurbs/triangulation.h>
-#include <pcl-1.8/pcl/visualization/pcl_visualizer.h>
 #include <pcl-1.8/pcl/2d/morphology.h>
+#include <pcl/filters/radius_outlier_removal.h>
 
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
@@ -33,10 +33,10 @@ void createPath(nav_msgs::Path &path, geometry_msgs::Pose poses[], int size) {
     for (unsigned i = 0; i<size; i++) {
         geometry_msgs::PoseStamped poseStamped;
         poseStamped.pose = poses[i];
-        poseStamped.header.frame_id = "/world";
+        poseStamped.header.frame_id = "/camera_link";
         path.poses.push_back(poseStamped);
     }
-    path.header.frame_id="/world";
+    path.header.frame_id="/camera_link";
 }
 
 void flipFiltered(pcl::PointCloud<pcl::PointXYZRGB> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
@@ -54,7 +54,7 @@ void flipFiltered(pcl::PointCloud<pcl::PointXYZRGB> &in, pcl::PointCloud<pcl::Po
     }
 }
 
-void createPoses(pcl::PointCloud<pcl::PointXYZRGB>::Ptr curve_filtered, geometry_msgs::Pose *poses) {
+void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, geometry_msgs::Pose *poses) {
     int counter = 0;
     for (const auto &p: curve_filtered->points) {
         if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
@@ -95,40 +95,20 @@ void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl
     }
 }
 
-void FilterCloudFromCurve(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::PointCloud<pcl::PointXYZRGB> &out, const ON_NurbsCurve& curve) {
-    out.header = in->header;
-    out.width = in->width;
-    out.height = in->height;
-    for (const auto &p : *in) {
-        if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
-            if (pcl::on_nurbs::Triangulation::isInside(curve, pcl::PointXYZ(p.x, p.y, p.z))) {
-                out.points.push_back(p);
+void FilterCloudFromCurve(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &world, pcl::PointCloud<pcl::PointXYZRGB> &out, pcl::PointCloud<pcl::PointXYZRGB>::Ptr &curve) {
+    float radius = 0.01;
+    for (const auto &p : *curve) {
+        for (const auto &c : *world) {
+            if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
+                if ((p.x <= c.x+radius && p.x >= c.x-radius) &&
+                    (p.y <= c.y+radius && p.y >= c.y-radius) &&
+                    (p.z <= c.z+radius && p.z >= c.z-radius)) {
+
+                    out.push_back(p);
+                    break;
+                }
             }
         }
-    }
-}
-
-void downsampleFromCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
-    out.header = in->header;
-    out.width = in->width;
-    out.height = in->height;
-    for (int i=0; i < in->points.size(); i++) {
-        if (i == 0 || i % 100 == 0 || i == in->points.size()-1) {
-            out.points.push_back(in->points[i]);
-        }
-    }
-}
-
-void averageFromCloud(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
-    out.header = in->header;
-    out.width = in->width;
-    out.height = in->height;
-    for (int i=0; i < in->points.size()-2; i++) {
-        pcl::PointXYZRGB point = in->points[i];
-        point.x = (in->points[i].x+in->points[i+1].x+in->points[i+2].x)/3;
-        point.y = (in->points[i].y+in->points[i+1].y+in->points[i+2].y)/3;
-        point.z = (in->points[i].z+in->points[i+1].z+in->points[i+2].z)/3;
-        out.points.push_back(point);
     }
 }
 
@@ -152,12 +132,12 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     ROS_INFO("Build Condition");
 // build the condition
-    int rMax = 60;
-    int rMin = 0;
-    int gMax = 30;
-    int gMin = 0;
-    int bMax = 30;
-    int bMin = 0;
+    int rMax = 255;
+    int rMin = 185;
+    int gMax = 255;
+    int gMin = 185;
+    int bMax = 255;
+    int bMin = 185;
     pcl::ConditionAnd<pcl::PointXYZRGB>::Ptr color_cond(new pcl::ConditionAnd<pcl::PointXYZRGB>());
     color_cond->addComparison(pcl::PackedRGBComparison<pcl::PointXYZRGB>::Ptr(
             new pcl::PackedRGBComparison<pcl::PointXYZRGB>("r", pcl::ComparisonOps::LT, rMax)));
@@ -183,22 +163,23 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr flipped_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     sensor_msgs::PointCloud2 cloud2;
     flipFiltered(*cloud_filtered, *flipped_cloud);
-    pcl::toROSMsg(*flipped_cloud, cloud2);
-    cloud2.header.frame_id = "/world";
+    pcl::toROSMsg(*cloud_filtered, cloud2);
+    cloud2.header = msg->header;
+//    cloud2.header.frame_id = "/camera_color_optical_frame";
 
     ROS_INFO("Publish Cloud");
     pub.publish(cloud2);
 
     // Transform to world
-    ros::Time now = ros::Time::now();
-    tf::TransformListener listener;
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-    world_filtered = cloud_filtered;
-    tf::StampedTransform transform;
+//    ros::Time now = ros::Time::now();
+//    tf::TransformListener listener;
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
+//    world_filtered = flipped_cloud;
+//    tf::StampedTransform transform;
 
     // convert to NURBS data structure
     pcl::on_nurbs::NurbsDataCurve data;
-    PointCloud2Vector2d(world_filtered, data.interior);
+    PointCloud2Vector2d(cloud_filtered, data.interior);
 
 
     ROS_INFO("Downsample Curve");
@@ -228,20 +209,8 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     pcl::on_nurbs::Triangulation::convertCurve2PointCloud(fit.m_nurbs, curve_filtered, resolution);
     ROS_INFO("Filter Curve");
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-    FilterCloudFromCurve(world_filtered, *world_curve_filtered, fit.m_nurbs);
-    ///////
-    sensor_msgs::PointCloud2 cloudTest;
-    pcl::toROSMsg(*world_curve_filtered, cloudTest);
-    cloudTest.header.frame_id = "/world";
-    pub.publish(cloudTest);
-    //////
+    FilterCloudFromCurve(cloud_filtered, *world_curve_filtered, curve_filtered);
     nav_msgs::Path path;
-    ROS_INFO("Down sample Cloud");
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_down_sampled(new pcl::PointCloud<pcl::PointXYZRGB>);
-    downsampleFromCloud(world_curve_filtered, *world_down_sampled);
-    ROS_INFO("Average CLoud");
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_average(new pcl::PointCloud<pcl::PointXYZRGB>);
-    averageFromCloud(world_down_sampled, *world_average);
     int size = world_curve_filtered->points.size();
     ROS_INFO("Create Poses");
     geometry_msgs::Pose poses[size];
@@ -262,7 +231,7 @@ int main(int argc, char **argv) {
     pcl_pub = nh.advertise<nav_msgs::Path>("pcl", 1);
     ros::Rate loop_rate(10);
     // Create a ROS subscriber for the input point cloud
-    ros::Subscriber sub = nh.subscribe("camera/depth/points", 1, cloud_cb);
+    ros::Subscriber sub = nh.subscribe("/camera/depth_registered/points", 1, cloud_cb);
     // Spin
     ros::spin();
 }
