@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: pcl_cpp
+Description: Description of pcl_cpp
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

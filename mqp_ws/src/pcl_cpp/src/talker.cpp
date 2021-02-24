@@ -12,10 +12,10 @@
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
 #include <pcl-1.8/pcl/filters/voxel_grid.h>
-#include <pcl-1.8/pcl/filters/conditional_removal.h>
-#include <pcl-1.8/pcl/surface/on_nurbs/fitting_curve_pdm.h>
-#include <pcl-1.8/pcl/surface/on_nurbs/triangulation.h>
-#include <pcl-1.8/pcl/2d/morphology.h>
+#include <pcl/filters/conditional_removal.h>
+#include <pcl/surface/on_nurbs/fitting_curve_pdm.h>
+#include <pcl/surface/on_nurbs/triangulation.h>
+#include <pcl/2d/morphology.h>
 #include <pcl/filters/radius_outlier_removal.h>
 
 #include <tf/transform_datatypes.h>
@@ -33,25 +33,10 @@ void createPath(nav_msgs::Path &path, geometry_msgs::Pose poses[], int size) {
     for (unsigned i = 0; i<size; i++) {
         geometry_msgs::PoseStamped poseStamped;
         poseStamped.pose = poses[i];
-        poseStamped.header.frame_id = "/camera_link";
+        poseStamped.header.frame_id = "/camera_color_optical_frame";
         path.poses.push_back(poseStamped);
     }
-    path.header.frame_id="/camera_link";
-}
-
-void flipFiltered(pcl::PointCloud<pcl::PointXYZRGB> &in, pcl::PointCloud<pcl::PointXYZRGB> &out) {
-    out.header = in.header;
-    out.width = in.width;
-    out.height = in.height;
-    out.points.resize(in.points.size());
-    for (size_t i = 0; i < in.points.size(); i++) {
-        out.points[i].x = in.points[i].z;
-        out.points[i].y = in.points[i].y;
-        out.points[i].z = in.points[i].x*(-1);
-        out.points[i].r = in.points[i].r;
-        out.points[i].g = in.points[i].g;
-        out.points[i].b = in.points[i].b;
-    }
+    path.header.frame_id="/camera_color_optical_frame";
 }
 
 void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, geometry_msgs::Pose *poses) {
@@ -59,13 +44,13 @@ void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, g
     for (const auto &p: curve_filtered->points) {
         if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
             geometry_msgs::Pose new_pose;
-            new_pose.position.x = p.z;
+            new_pose.position.x = p.x;
             new_pose.position.y = p.y;
-            new_pose.position.z = p.x*(-1);
-            new_pose.orientation.w = 0.5;
-            new_pose.orientation.x = 0.5;
-            new_pose.orientation.y = 0.5;
-            new_pose.orientation.z = 0.5;
+            new_pose.position.z = p.z;
+            new_pose.orientation.w = 1;
+            new_pose.orientation.x = 1;
+            new_pose.orientation.y = 1;
+            new_pose.orientation.z = 1;
             poses[counter] = new_pose;
             counter++;
         }
@@ -132,12 +117,18 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     ROS_INFO("Build Condition");
 // build the condition
-    int rMax = 255;
-    int rMin = 185;
-    int gMax = 255;
-    int gMin = 185;
-    int bMax = 255;
-    int bMin = 185;
+//    int rMax = 60;
+//    int rMin = 0;
+//    int gMax = 30;
+//    int gMin = 0;
+//    int bMax = 30;
+//    int bMin = 0;
+    int rMax = 40;
+    int rMin = 0;
+    int gMax = 30;
+    int gMin = 0;
+    int bMax = 40;
+    int bMin = 0;
     pcl::ConditionAnd<pcl::PointXYZRGB>::Ptr color_cond(new pcl::ConditionAnd<pcl::PointXYZRGB>());
     color_cond->addComparison(pcl::PackedRGBComparison<pcl::PointXYZRGB>::Ptr(
             new pcl::PackedRGBComparison<pcl::PointXYZRGB>("r", pcl::ComparisonOps::LT, rMax)));
@@ -160,22 +151,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     ROS_INFO("Apply Filter");
     condrem.filter(*cloud_filtered);
 
-    pcl::PointCloud<pcl::PointXYZRGB>::Ptr flipped_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
     sensor_msgs::PointCloud2 cloud2;
-    flipFiltered(*cloud_filtered, *flipped_cloud);
-    pcl::toROSMsg(*cloud_filtered, cloud2);
-    cloud2.header = msg->header;
-//    cloud2.header.frame_id = "/camera_color_optical_frame";
-
-    ROS_INFO("Publish Cloud");
-    pub.publish(cloud2);
-
-    // Transform to world
-//    ros::Time now = ros::Time::now();
-//    tf::TransformListener listener;
-//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
-//    world_filtered = flipped_cloud;
-//    tf::StampedTransform transform;
 
     // convert to NURBS data structure
     pcl::on_nurbs::NurbsDataCurve data;
@@ -210,6 +186,17 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     ROS_INFO("Filter Curve");
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
     FilterCloudFromCurve(cloud_filtered, *world_curve_filtered, curve_filtered);
+//    pcl::VoxelGrid<pcl::PointXYZRGB> avg;
+//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloudFiltered(new pcl::PointCloud<pcl::PointXYZRGB>);
+//    avg.setInputCloud(world_curve_filtered);
+//    avg.setLeafSize(0.01f, 0.01f, 0.01f);
+//    avg.filter(*cloudFiltered);
+    pcl::toROSMsg(*world_curve_filtered, cloud2);
+    cloud2.header = msg->header;
+    ROS_INFO("%s", cloud2.header.frame_id.c_str());
+
+    ROS_INFO("Publish Cloud");
+    pub.publish(cloud2);
     nav_msgs::Path path;
     int size = world_curve_filtered->points.size();
     ROS_INFO("Create Poses");

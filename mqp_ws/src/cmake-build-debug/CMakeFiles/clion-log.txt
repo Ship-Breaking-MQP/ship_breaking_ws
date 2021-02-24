@@ -1,0 +1,350 @@
+/home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/tyler/ship_breaking_ws/mqp_ws/src
+-- Using CATKIN_DEVEL_PREFIX: /home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel
+-- Using CMAKE_PREFIX_PATH: /home/tyler/ship_breaking_ws/mqp_ws/devel;/opt/ros/melodic
+-- This workspace overlays: /home/tyler/ship_breaking_ws/mqp_ws/devel;/opt/ros/melodic
+-- Found PythonInterp: /usr/bin/python2 (found suitable version "2.7.17", minimum required is "2") 
+-- Using PYTHON_EXECUTABLE: /usr/bin/python2
+-- Using Debian Python package layout
+-- Using empy: /usr/bin/empy
+-- Using CATKIN_ENABLE_TESTING: ON
+-- Call enable_testing()
+-- Using CATKIN_TEST_RESULTS_DIR: /home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/test_results
+-- Found gtest sources under '/usr/src/googletest': gtests will be built
+-- Found gmock sources under '/usr/src/googletest': gmock will be built
+-- Found PythonInterp: /usr/bin/python2 (found version "2.7.17") 
+-- Using Python nosetests: /usr/bin/nosetests-2.7
+-- catkin 0.7.29
+-- BUILD_SHARED_LIBS is on
+-- BUILD_SHARED_LIBS is on
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- ~~  traversing 8 packages in topological order:
+-- ~~  - franka_description
+-- ~~  - panda_moveit_config
+-- ~~  - panda_moveit_controller
+-- ~~  - realsense2_description
+-- ~~  - scrap_descs
+-- ~~  - pcl_cpp
+-- ~~  - scrap_burning
+-- ~~  - realsense2_camera
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- +++ processing catkin package: 'franka_description'
+-- ==> add_subdirectory(franka_description)
+-- +++ processing catkin package: 'panda_moveit_config'
+-- ==> add_subdirectory(panda_moveit_config)
+-- +++ processing catkin package: 'panda_moveit_controller'
+-- ==> add_subdirectory(panda_moveit_controller)
+-- +++ processing catkin package: 'realsense2_description'
+-- ==> add_subdirectory(realsense-ros/realsense2_description)
+-- +++ processing catkin package: 'scrap_descs'
+-- ==> add_subdirectory(scrap_descs)
+-- +++ processing catkin package: 'pcl_cpp'
+-- ==> add_subdirectory(pcl_cpp)
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (eigen) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:149 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:634 (find_eigen)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:844 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (openni)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:231 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:640 (find_openni)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (OpenNI2)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:276 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:642 (find_openni2)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (ensenso)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:308 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:644 (find_ensenso)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Could NOT find ensenso (missing: ENSENSO_LIBRARY ENSENSO_INCLUDE_DIR) 
+** WARNING ** io features related to ensenso will be disabled
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (DAVIDSDK)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:342 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:646 (find_davidSDK)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Could NOT find DAVIDSDK (missing: DAVIDSDK_LIBRARY DAVIDSDK_INCLUDE_DIR) 
+** WARNING ** io features related to davidSDK will be disabled
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (DSSDK) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:384 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:648 (find_dssdk)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Could NOT find DSSDK (missing: _DSSDK_LIBRARIES) 
+** WARNING ** io features related to dssdk will be disabled
+** WARNING ** io features related to pcap will be disabled
+** WARNING ** io features related to png will be disabled
+-- The imported target "vtkRenderingPythonTkWidgets" references the file
+   "/usr/lib/x86_64-linux-gnu/libvtkRenderingPythonTkWidgets.so"
+but this file does not exist.  Possible reasons include:
+* The file was deleted, renamed, or moved to another location.
+* An install or uninstall procedure did not complete successfully.
+* The installation package was faulty and contained
+   "/usr/lib/cmake/vtk-6.3/VTKTargets.cmake"
+but not all the files it references.
+
+-- The imported target "vtk" references the file
+   "/usr/bin/vtk"
+but this file does not exist.  Possible reasons include:
+* The file was deleted, renamed, or moved to another location.
+* An install or uninstall procedure did not complete successfully.
+* The installation package was faulty and contained
+   "/usr/lib/cmake/vtk-6.3/VTKTargets.cmake"
+but not all the files it references.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (libusb-1.0)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:511 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:654 (find_libusb)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+** WARNING ** io features related to libusb-1.0 will be disabled
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (Flann) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:469 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:636 (find_flann)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:844 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (Flann) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:469 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:636 (find_flann)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:844 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (Flann) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:469 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:636 (find_flann)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:844 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (qhull) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:181 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:638 (find_qhull)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:841 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (Flann) does
+  not match the name of the calling package (PCL).  This can lead to problems
+  in calling code that expects `find_package` result variables (e.g.,
+  `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:469 (find_package_handle_standard_args)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:636 (find_flann)
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:844 (find_external_library)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- looking for PCL_COMMON
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (PCL_COMMON)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:905 (find_package_handle_standard_args)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- looking for PCL_OCTREE
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (PCL_OCTREE)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:905 (find_package_handle_standard_args)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- looking for PCL_IO
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (PCL_IO)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:905 (find_package_handle_standard_args)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- looking for PCL_KDTREE
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (PCL_KDTREE)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:905 (find_package_handle_standard_args)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- looking for PCL_SEARCH
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args` (PCL_SEARCH)
+  does not match the name of the calling package (PCL).  This can lead to
+  problems in calling code that expects `find_package` result variables
+  (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:905 (find_package_handle_standard_args)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- looking for PCL_SURFACE
+CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
+  The package name passed to `find_package_handle_standard_args`
+  (PCL_SURFACE) does not match the name of the calling package (PCL).  This
+  can lead to problems in calling code that expects `find_package` result
+  variables (e.g., `_FOUND`) to follow a certain pattern.
+Call Stack (most recent call first):
+  /usr/local/share/pcl-1.8/PCLConfig.cmake:905 (find_package_handle_standard_args)
+  pcl_cpp/CMakeLists.txt:21 (find_package)
+This warning is for project developers.  Use -Wno-dev to suppress it.
+
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- +++ processing catkin package: 'scrap_burning'
+-- ==> add_subdirectory(scrap_burning)
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- +++ processing catkin package: 'realsense2_camera'
+-- ==> add_subdirectory(realsense-ros/realsense2_camera)
+-- Using these message generators: gencpp;geneus;genlisp;gennodejs;genpy
+-- Create Debug Build.
+-- realsense2_camera: 2 messages, 0 services
+-- Configuring done
+CMake Warning at pcl_cpp/CMakeLists.txt:228 (add_executable):
+  Cannot generate a safe linker search path for target talker because files
+  in some directories may conflict with libraries in implicit directories:
+
+    link library [libpcl_kdtree.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_search.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_features.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_sample_consensus.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_filters.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_ml.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_segmentation.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_surface.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_common.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_octree.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    link library [libpcl_io.so] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+
+  Some of these libraries may not be found correctly.
+
+
+CMake Warning at pcl_cpp/CMakeLists.txt:228 (add_executable):
+  Cannot generate a safe runtime search path for target talker because files
+  in some directories may conflict with libraries in implicit directories:
+
+    runtime library [libpcl_kdtree.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_search.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_features.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_sample_consensus.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_filters.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_ml.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_segmentation.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_surface.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_common.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_octree.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+    runtime library [libpcl_io.so.1.8] in /usr/lib/x86_64-linux-gnu may be hidden by files in:
+      /usr/local/lib
+
+  Some of these libraries may not be found correctly.
+
+
+-- Generating done
+-- Build files have been written to: /home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug

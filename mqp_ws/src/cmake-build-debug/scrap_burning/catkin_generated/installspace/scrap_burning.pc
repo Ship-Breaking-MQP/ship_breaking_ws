@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: scrap_burning
+Description: Description of scrap_burning
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
