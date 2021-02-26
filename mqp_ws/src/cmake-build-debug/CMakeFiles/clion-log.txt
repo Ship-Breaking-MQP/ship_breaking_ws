@@ -1,7 +1,7 @@
 /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /home/tyler/ship_breaking_ws/mqp_ws/src
 -- Using CATKIN_DEVEL_PREFIX: /home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel
--- Using CMAKE_PREFIX_PATH: /home/tyler/ship_breaking_ws/mqp_ws/devel;/opt/ros/melodic
--- This workspace overlays: /home/tyler/ship_breaking_ws/mqp_ws/devel;/opt/ros/melodic
+-- Using CMAKE_PREFIX_PATH: /opt/ros/melodic
+-- This workspace overlays: /opt/ros/melodic
 -- Found PythonInterp: /usr/bin/python2 (found suitable version "2.7.17", minimum required is "2") 
 -- Using PYTHON_EXECUTABLE: /usr/bin/python2
 -- Using Debian Python package layout

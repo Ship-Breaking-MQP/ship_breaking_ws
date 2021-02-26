@@ -12,13 +12,13 @@ def talker():
     start_pose_stamped = PoseStamped()
     start_pose_stamped.header.frame_id = "panda_link8"
     start_pose = Pose()
-    start_pose.position.x = 1
-    start_pose.position.y = 1
-    start_pose.position.z = 1
-    start_pose.orientation.z = 10
-    start_pose.orientation.y = 10
-    start_pose.orientation.x = 10
-    start_pose.orientation.w = 10
+    start_pose.position.x = 0.3595
+    start_pose.position.y = 0
+    start_pose.position.z = 0.643
+    start_pose.orientation.x = 0.653
+    start_pose.orientation.y = -0.266
+    start_pose.orientation.z = 0.655
+    start_pose.orientation.w = -0.270
     start_pose_stamped.pose = start_pose
     path.poses.append(start_pose_stamped)
     rospy.loginfo(start_pose_stamped.header)

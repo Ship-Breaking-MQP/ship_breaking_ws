@@ -40,7 +40,6 @@ class PclSubscriber(object):
         # robot:
         print "============ Printing robot state"
         print robot.get_current_state()
-        print ""
 
         self.box_name = ''
         self.robot = robot
@@ -56,10 +55,14 @@ class PclSubscriber(object):
         rospy.loginfo("Received %d points", len(data.poses))
         for i in data.poses:
             trajectory_array.append(i.pose)
-        (plan, fraction) = self.plan_cartesian_path(waypoints=trajectory_array)
-
-        rospy.loginfo("Received plan")
-        self.execute_plan(plan)
+        self.plan_pose_goal(pose=trajectory_array[0])
+        # (plan, fraction) = self.plan_cartesian_path(waypoints=trajectory_array)
+        #
+        # rospy.loginfo("Received plan")
+        # print plan
+        # print "============ Press `Enter` to move robot ============="
+        # raw_input()
+        # self.execute_plan(plan)
 
     def listener(self):
         rospy.Subscriber("pcl", Path, self.callback)
@@ -77,6 +80,19 @@ class PclSubscriber(object):
             0.0)
 
         return plan, fraction
+
+    def plan_pose_goal(self, pose=None):
+        move_group = self.move_group
+
+        print "Moving to pose " + str(pose)
+        move_group.set_pose_target(pose)
+
+        plan = move_group.go(wait=True)
+        # Calling `stop()` ensures that there is no residual movement
+        move_group.stop()
+        # It is always good to clear your targets after planning with poses.
+        # Note: there is no equivalent function for clear_joint_value_targets()
+        move_group.clear_pose_targets()
 
     def execute_plan(self, plan):
         move_group = self.move_group

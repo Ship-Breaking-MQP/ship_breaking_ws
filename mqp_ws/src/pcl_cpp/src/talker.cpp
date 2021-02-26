@@ -17,6 +17,7 @@
 #include <pcl/surface/on_nurbs/triangulation.h>
 #include <pcl/2d/morphology.h>
 #include <pcl/filters/radius_outlier_removal.h>
+#include <pcl_ros/transforms.h>
 
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
@@ -33,10 +34,10 @@ void createPath(nav_msgs::Path &path, geometry_msgs::Pose poses[], int size) {
     for (unsigned i = 0; i<size; i++) {
         geometry_msgs::PoseStamped poseStamped;
         poseStamped.pose = poses[i];
-        poseStamped.header.frame_id = "/camera_color_optical_frame";
+        poseStamped.header.frame_id = "/panda_link0";
         path.poses.push_back(poseStamped);
     }
-    path.header.frame_id="/camera_color_optical_frame";
+    path.header.frame_id="/panda_link0";
 }
 
 void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, geometry_msgs::Pose *poses) {
@@ -47,10 +48,10 @@ void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, g
             new_pose.position.x = p.x;
             new_pose.position.y = p.y;
             new_pose.position.z = p.z;
-            new_pose.orientation.w = 1;
-            new_pose.orientation.x = 1;
-            new_pose.orientation.y = 1;
-            new_pose.orientation.z = 1;
+            new_pose.orientation.w = -0.270;
+            new_pose.orientation.x = 0.653;
+            new_pose.orientation.y = -0.266;
+            new_pose.orientation.z = 0.655;
             poses[counter] = new_pose;
             counter++;
         }
@@ -186,22 +187,33 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     ROS_INFO("Filter Curve");
     pcl::PointCloud<pcl::PointXYZRGB>::Ptr world_curve_filtered(new pcl::PointCloud<pcl::PointXYZRGB>);
     FilterCloudFromCurve(cloud_filtered, *world_curve_filtered, curve_filtered);
-//    pcl::VoxelGrid<pcl::PointXYZRGB> avg;
-//    pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloudFiltered(new pcl::PointCloud<pcl::PointXYZRGB>);
-//    avg.setInputCloud(world_curve_filtered);
-//    avg.setLeafSize(0.01f, 0.01f, 0.01f);
-//    avg.filter(*cloudFiltered);
-    pcl::toROSMsg(*world_curve_filtered, cloud2);
+    ros::Time now = ros::Time::now();
+    tf::TransformListener listener;
+    pcl::PointCloud<pcl::PointXYZRGB>::Ptr tf_filtered_cloud(new pcl::PointCloud<pcl::PointXYZRGB>);
+    tf::StampedTransform transform;
+    try {
+        tf_filtered_cloud = world_curve_filtered;
+        listener.waitForTransform("panda_link0", "camera_depth_optical_frame",
+                                  now, ros::Duration(3.0));
+        listener.lookupTransform("panda_link0", "camera_depth_optical_frame",
+                                 ros::Time(0), transform);
+        pcl_ros::transformPointCloud(*world_curve_filtered, *tf_filtered_cloud, (transform.inverse()) * transform);
+    } catch (tf::TransformException ex) {
+        ROS_ERROR("Unable to perform Look up error: %s", ex.what());
+        ros::Duration(1.0).sleep();
+    }
+
+    pcl::toROSMsg(*tf_filtered_cloud, cloud2);
     cloud2.header = msg->header;
     ROS_INFO("%s", cloud2.header.frame_id.c_str());
 
     ROS_INFO("Publish Cloud");
     pub.publish(cloud2);
     nav_msgs::Path path;
-    int size = world_curve_filtered->points.size();
+    int size = tf_filtered_cloud->points.size();
     ROS_INFO("Create Poses");
     geometry_msgs::Pose poses[size];
-    createPoses(world_curve_filtered, poses);
+    createPoses(tf_filtered_cloud, poses);
     ROS_INFO("Create Path");
     createPath(path, poses, size);
     publishPclPath(path);

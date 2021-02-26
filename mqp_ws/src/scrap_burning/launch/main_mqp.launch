@@ -1,5 +1,5 @@
 <launch>
-    <!-- Launch robot -->
+<!--     Launch robot -->
 <!--    <include file="/opt/ros/melodic/share/panda_moveit_config/launch/panda_control_moveit_rviz.launch">-->
 <!--        <arg name="robot_ip" value="172.16.0.2" />-->
 <!--        <arg name="load_gripper" value="true" />-->

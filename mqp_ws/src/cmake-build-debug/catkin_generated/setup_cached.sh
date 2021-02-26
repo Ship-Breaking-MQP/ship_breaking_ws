@@ -11,5 +11,5 @@ export CMAKE_PREFIX_PATH="/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-de
 export LD_LIBRARY_PATH="/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel/lib:$LD_LIBRARY_PATH"
 export PKG_CONFIG_PATH="/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel/lib/pkgconfig:$PKG_CONFIG_PATH"
 export PYTHONPATH="/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel/lib/python2.7/dist-packages:$PYTHONPATH"
-export ROSLISP_PACKAGE_DIRECTORIES="/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel/share/common-lisp:$ROSLISP_PACKAGE_DIRECTORIES"
+export ROSLISP_PACKAGE_DIRECTORIES='/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/devel/share/common-lisp'
 export ROS_PACKAGE_PATH="/home/tyler/ship_breaking_ws/mqp_ws/src:$ROS_PACKAGE_PATH"
