@@ -60,3 +60,7 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/scrap_burning" TYPE PROGRAM FILES "/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/scrap_burning/catkin_generated/installspace/pcl_publisher.py")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/scrap_burning" TYPE PROGRAM FILES "/home/tyler/ship_breaking_ws/mqp_ws/src/cmake-build-debug/scrap_burning/catkin_generated/installspace/talker_python.py")
+endif()
+

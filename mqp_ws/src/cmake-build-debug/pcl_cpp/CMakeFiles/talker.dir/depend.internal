@@ -332,8 +332,6 @@ pcl_cpp/CMakeFiles/talker.dir/src/talker.cpp.o
  /usr/include/eigen3/Eigen/src/plugins/CommonCwiseUnaryOps.h
  /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseBinaryOps.h
  /usr/include/eigen3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
- /usr/include/pcl-1.8/pcl/2d/impl/morphology.hpp
- /usr/include/pcl-1.8/pcl/2d/morphology.h
  /usr/include/pcl-1.8/pcl/ModelCoefficients.h
  /usr/include/pcl-1.8/pcl/PCLHeader.h
  /usr/include/pcl-1.8/pcl/PCLImage.h
@@ -355,12 +353,9 @@ pcl_cpp/CMakeFiles/talker.dir/src/talker.cpp.o
  /usr/include/pcl-1.8/pcl/common/impl/copy_point.hpp
  /usr/include/pcl-1.8/pcl/common/impl/eigen.hpp
  /usr/include/pcl-1.8/pcl/common/impl/io.hpp
- /usr/include/pcl-1.8/pcl/common/impl/projection_matrix.hpp
  /usr/include/pcl-1.8/pcl/common/impl/transforms.hpp
  /usr/include/pcl-1.8/pcl/common/io.h
  /usr/include/pcl-1.8/pcl/common/point_tests.h
- /usr/include/pcl-1.8/pcl/common/projection_matrix.h
- /usr/include/pcl-1.8/pcl/common/time.h
  /usr/include/pcl-1.8/pcl/common/transforms.h
  /usr/include/pcl-1.8/pcl/console/print.h
  /usr/include/pcl-1.8/pcl/conversions.h
@@ -369,15 +364,12 @@ pcl_cpp/CMakeFiles/talker.dir/src/talker.cpp.o
  /usr/include/pcl-1.8/pcl/filters/boost.h
  /usr/include/pcl-1.8/pcl/filters/conditional_removal.h
  /usr/include/pcl-1.8/pcl/filters/filter.h
- /usr/include/pcl-1.8/pcl/filters/filter_indices.h
  /usr/include/pcl-1.8/pcl/filters/impl/conditional_removal.hpp
  /usr/include/pcl-1.8/pcl/filters/impl/filter.hpp
- /usr/include/pcl-1.8/pcl/filters/impl/filter_indices.hpp
- /usr/include/pcl-1.8/pcl/filters/impl/radius_outlier_removal.hpp
- /usr/include/pcl-1.8/pcl/filters/radius_outlier_removal.h
+ /usr/include/pcl-1.8/pcl/filters/impl/voxel_grid.hpp
+ /usr/include/pcl-1.8/pcl/filters/voxel_grid.h
  /usr/include/pcl-1.8/pcl/for_each_type.h
  /usr/include/pcl-1.8/pcl/impl/cloud_iterator.hpp
- /usr/include/pcl-1.8/pcl/impl/instantiate.hpp
  /usr/include/pcl-1.8/pcl/impl/pcl_base.hpp
  /usr/include/pcl-1.8/pcl/impl/point_types.hpp
  /usr/include/pcl-1.8/pcl/io/boost.h
@@ -385,140 +377,11 @@ pcl_cpp/CMakeFiles/talker.dir/src/talker.cpp.o
  /usr/include/pcl-1.8/pcl/io/impl/pcd_io.hpp
  /usr/include/pcl-1.8/pcl/io/lzf.h
  /usr/include/pcl-1.8/pcl/io/pcd_io.h
- /usr/include/pcl-1.8/pcl/kdtree/flann.h
- /usr/include/pcl-1.8/pcl/kdtree/impl/kdtree_flann.hpp
- /usr/include/pcl-1.8/pcl/kdtree/kdtree.h
- /usr/include/pcl-1.8/pcl/kdtree/kdtree_flann.h
- /usr/include/pcl-1.8/pcl/octree/impl/octree_base.hpp
- /usr/include/pcl-1.8/pcl/octree/impl/octree_iterator.hpp
- /usr/include/pcl-1.8/pcl/octree/impl/octree_pointcloud.hpp
- /usr/include/pcl-1.8/pcl/octree/impl/octree_search.hpp
- /usr/include/pcl-1.8/pcl/octree/octree_base.h
- /usr/include/pcl-1.8/pcl/octree/octree_container.h
- /usr/include/pcl-1.8/pcl/octree/octree_iterator.h
- /usr/include/pcl-1.8/pcl/octree/octree_key.h
- /usr/include/pcl-1.8/pcl/octree/octree_nodes.h
- /usr/include/pcl-1.8/pcl/octree/octree_pointcloud.h
- /usr/include/pcl-1.8/pcl/octree/octree_search.h
  /usr/include/pcl-1.8/pcl/pcl_base.h
  /usr/include/pcl-1.8/pcl/pcl_config.h
  /usr/include/pcl-1.8/pcl/pcl_exports.h
  /usr/include/pcl-1.8/pcl/pcl_macros.h
  /usr/include/pcl-1.8/pcl/point_cloud.h
- /usr/include/pcl-1.8/pcl/point_representation.h
  /usr/include/pcl-1.8/pcl/point_traits.h
  /usr/include/pcl-1.8/pcl/point_types.h
  /usr/include/pcl-1.8/pcl/register_point_struct.h
- /usr/include/pcl-1.8/pcl/search/impl/kdtree.hpp
- /usr/include/pcl-1.8/pcl/search/impl/organized.hpp
- /usr/include/pcl-1.8/pcl/search/impl/search.hpp
- /usr/include/pcl-1.8/pcl/search/kdtree.h
- /usr/include/pcl-1.8/pcl/search/octree.h
- /usr/include/pcl-1.8/pcl/search/organized.h
- /usr/include/pcl-1.8/pcl/search/pcl_search.h
- /usr/include/pcl-1.8/pcl/search/search.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_3dm.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_3dm_attributes.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_3dm_properties.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_3dm_settings.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_annotation.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_annotation2.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_arc.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_arccurve.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_archive.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_array.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_array_defs.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_base32.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_base64.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_beam.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_bezier.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_bitmap.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_bounding_box.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_box.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_brep.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_circle.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_color.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_compress.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_cone.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_crc.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_curve.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_curveonsurface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_curveproxy.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_cylinder.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_defines.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_detail.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_dimstyle.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_ellipse.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_error.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_evaluate_nurbs.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_extensions.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_font.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_fpoint.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_fsp.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_fsp_defs.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_geometry.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_group.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_hatch.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_instance.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_intersect.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_knot.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_layer.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_light.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_line.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_linecurve.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_linestyle.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_linetype.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_lookup.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_mapchan.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_material.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_math.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_matrix.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_memory.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_mesh.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_nurbscurve.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_nurbssurface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_object.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_object_history.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_objref.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_offsetsurface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_optimize.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_plane.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_planesurface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_pluginlist.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_point.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_pointcloud.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_pointgeometry.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_pointgrid.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_polycurve.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_polyline.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_polylinecurve.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_rand.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_rendering.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_revsurface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_rtree.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_sphere.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_string.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_sumsurface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_surface.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_surfaceproxy.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_system.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_textlog.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_texture.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_texture_mapping.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_torus.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_unicode.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_userdata.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_uuid.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_viewport.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_workspace.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_xform.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/opennurbs_zlib.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/zconf.h
- /usr/local/include/pcl-1.8/pcl/surface/3rdparty/opennurbs/zlib.h
- /usr/local/include/pcl-1.8/pcl/surface/on_nurbs/fitting_curve_pdm.h
- /usr/local/include/pcl-1.8/pcl/surface/on_nurbs/nurbs_data.h
- /usr/local/include/pcl-1.8/pcl/surface/on_nurbs/nurbs_solve.h
- /usr/local/include/pcl-1.8/pcl/surface/on_nurbs/nurbs_tools.h
- /usr/local/include/pcl-1.8/pcl/surface/on_nurbs/sparse_mat.h
- /usr/local/include/pcl-1.8/pcl/surface/on_nurbs/triangulation.h

@@ -83,6 +83,7 @@ set(CMAKE_MAKEFILE_DEPENDS
   "../scrap_burning/package.xml"
   "../scrap_burning/scripts/pcl_publisher.py"
   "../scrap_burning/scripts/pcl_subscriber.py"
+  "../scrap_burning/scripts/talker_python.py"
   "../scrap_descs/CMakeLists.txt"
   "../scrap_descs/package.xml"
   "/opt/ros/melodic/share/actionlib/cmake/actionlib-msg-extras.cmake"

@@ -11,12 +11,12 @@
 #include <pcl_conversions/pcl_conversions.h>
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
-#include <pcl-1.8/pcl/filters/voxel_grid.h>
+#include <pcl/filters/voxel_grid.h>
 #include <pcl/filters/conditional_removal.h>
-#include <pcl/surface/on_nurbs/fitting_curve_pdm.h>
-#include <pcl/surface/on_nurbs/triangulation.h>
-#include <pcl/2d/morphology.h>
-#include <pcl/filters/radius_outlier_removal.h>
+#include <pcl-1.8/pcl/surface/on_nurbs/fitting_curve_pdm.h>
+#include <pcl-1.8/pcl/surface/on_nurbs/triangulation.h>
+#include <pcl-1.8/pcl/2d/morphology.h>
+#include <pcl-1.8/pcl/filters/radius_outlier_removal.h>
 #include <pcl_ros/transforms.h>
 
 #include <tf/transform_datatypes.h>
@@ -45,13 +45,20 @@ void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, g
     for (const auto &p: curve_filtered->points) {
         if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
             geometry_msgs::Pose new_pose;
-            new_pose.position.x = p.x;
+            new_pose.position.x = p.x - 0.1;
             new_pose.position.y = p.y;
-            new_pose.position.z = p.z;
-            new_pose.orientation.w = -0.270;
-            new_pose.orientation.x = 0.653;
-            new_pose.orientation.y = -0.266;
-            new_pose.orientation.z = 0.655;
+            new_pose.position.z = p.z - 0.35;
+            new_pose.orientation.w = -0.202;
+            new_pose.orientation.x = 0.689;
+            new_pose.orientation.y = -0.238;
+            new_pose.orientation.z = 0.652;
+//            new_pose.position.x = p.x - 0.2;
+//            new_pose.position.y = p.y;
+//            new_pose.position.z = p.z + 0.2;
+//            new_pose.orientation.w = -0.270;
+//            new_pose.orientation.x = 0.653;
+//            new_pose.orientation.y = -0.266;
+//            new_pose.orientation.z = 0.655;
             poses[counter] = new_pose;
             counter++;
         }
@@ -197,7 +204,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
                                   now, ros::Duration(3.0));
         listener.lookupTransform("panda_link0", "camera_depth_optical_frame",
                                  ros::Time(0), transform);
-        pcl_ros::transformPointCloud(*world_curve_filtered, *tf_filtered_cloud, (transform.inverse()) * transform);
+        pcl_ros::transformPointCloud(*world_curve_filtered, *tf_filtered_cloud, transform);
     } catch (tf::TransformException ex) {
         ROS_ERROR("Unable to perform Look up error: %s", ex.what());
         ros::Duration(1.0).sleep();
@@ -205,7 +212,8 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     pcl::toROSMsg(*tf_filtered_cloud, cloud2);
     cloud2.header = msg->header;
-    ROS_INFO("%s", cloud2.header.frame_id.c_str());
+    cloud2.header.frame_id = "panda_link0";
+//    ROS_INFO("%s", cloud2.header.frame_id.c_str());
 
     ROS_INFO("Publish Cloud");
     pub.publish(cloud2);

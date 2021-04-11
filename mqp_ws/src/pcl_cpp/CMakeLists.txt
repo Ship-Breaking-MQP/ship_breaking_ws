@@ -17,7 +17,7 @@ endif()
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
-set(PCL_DIR "/usr/include/pcl-1.8/pcl")
+set(PCL_DIR "/usr/local/share/pcl-1.8/")
 find_package(PCL 1.8 REQUIRED COMPONENTS
         common
         io

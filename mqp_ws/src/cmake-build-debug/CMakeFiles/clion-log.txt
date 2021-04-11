@@ -128,15 +128,6 @@ but this file does not exist.  Possible reasons include:
    "/usr/lib/cmake/vtk-6.3/VTKTargets.cmake"
 but not all the files it references.
 
--- The imported target "vtk" references the file
-   "/usr/bin/vtk"
-but this file does not exist.  Possible reasons include:
-* The file was deleted, renamed, or moved to another location.
-* An install or uninstall procedure did not complete successfully.
-* The installation package was faulty and contained
-   "/usr/lib/cmake/vtk-6.3/VTKTargets.cmake"
-but not all the files it references.
-
 CMake Warning (dev) at /home/tyler/.local/share/JetBrains/Toolbox/apps/CLion/ch-0/203.7148.70/bin/cmake/linux/share/cmake-3.17/Modules/FindPackageHandleStandardArgs.cmake:272 (message):
   The package name passed to `find_package_handle_standard_args` (libusb-1.0)
   does not match the name of the calling package (PCL).  This can lead to

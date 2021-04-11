@@ -1,11 +1,12 @@
 <launch>
-<!--     Launch robot -->
-<!--    <include file="/opt/ros/melodic/share/panda_moveit_config/launch/panda_control_moveit_rviz.launch">-->
+<!--    <include file="$(find panda_moveit_config)/launch/panda_control_moveit_rviz.launch">-->
 <!--        <arg name="robot_ip" value="172.16.0.2" />-->
 <!--        <arg name="load_gripper" value="true" />-->
 <!--        &lt;!&ndash; Do not launch rviz, we will run our own &ndash;&gt;-->
-<!--        <arg name="launch_rviz" value="false" />-->
+<!--        <arg name="launch_rviz" value="true" />-->
 <!--    </include>-->
+
+<!--    rostopic pub -1 /franka_control/error_recovery/goal franka_msgs/ErrorRecoveryActionGoal "{}"-->
 
     <!-- Launch Realsense -->
     <include file="$(find realsense2_camera)/launch/rs_rgbd.launch">
@@ -14,8 +15,8 @@
 
     <!-- Publish transformation frames for camera -->
     <node pkg="tf" type="static_transform_publisher" name="camera_link_tf"
-          args="0.040 -0.0175 0.066 3.1415 -1.571 0 /panda_hand /camera_link 100" />
-
+          args="0.080 0.03 0 3.927 -1.571 0 /panda_link8 /camera_link 100" />
+<!--             args="0.040 -0.0175 0.066 3.1415 -1.571 0 /panda_hand /camera_link 100" />-->
     <!-- Launch rviz -->
 <!--    <node name="rviz_scrap" pkg="rviz" type="rviz" args="-d $(find scrap_burning)/phys.rviz" />-->
 </launch>

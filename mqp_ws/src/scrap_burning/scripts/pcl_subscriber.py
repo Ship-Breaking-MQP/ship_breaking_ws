@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 import sys
+import math
 
 import moveit_commander
 import rospy
@@ -51,18 +52,25 @@ class PclSubscriber(object):
 
     def callback(self, data):
         global trajectory_array
-        rospy.loginfo("Received path: %s", data)
+        waypoints = []
+        trajectory_waypoints = []
+        move_group = self.move_group
+        move_group.set_goal_orientation_tolerance(6)
+        # rospy.loginfo("Received path: %s", data)
         rospy.loginfo("Received %d points", len(data.poses))
-        for i in data.poses:
-            trajectory_array.append(i.pose)
-        self.plan_pose_goal(pose=trajectory_array[0])
-        # (plan, fraction) = self.plan_cartesian_path(waypoints=trajectory_array)
-        #
-        # rospy.loginfo("Received plan")
-        # print plan
-        # print "============ Press `Enter` to move robot ============="
+        for stamped_pose in data.poses:
+            # trajectory_waypoints.append(stamped_pose.pose)
+            if not self.is_close(stamped_pose.pose, waypoints):
+                waypoints.append(stamped_pose.pose)
+        print('There are ' + str(len(waypoints)) + ' number of waypoints')
+        waypoints.sort(key=lambda waypoint: waypoint.position.y, reverse=True)
+
+        (plan, fraction) = self.plan_cartesian_path(waypoints=waypoints)
+
+        rospy.loginfo("Received plan")
+        print plan
         # raw_input()
-        # self.execute_plan(plan)
+        self.execute_plan(plan)
 
     def listener(self):
         rospy.Subscriber("pcl", Path, self.callback)
@@ -83,10 +91,11 @@ class PclSubscriber(object):
 
     def plan_pose_goal(self, pose=None):
         move_group = self.move_group
+        move_group.set_goal_tolerance(0.1)
 
         print "Moving to pose " + str(pose)
         move_group.set_pose_target(pose)
-
+        # move_group.set_goal_orientation_tolerance(6)
         plan = move_group.go(wait=True)
         # Calling `stop()` ensures that there is no residual movement
         move_group.stop()
@@ -98,6 +107,18 @@ class PclSubscriber(object):
         move_group = self.move_group
 
         move_group.execute(plan, wait=True)
+
+    def is_close(self, pose, waypoints):
+        tolerance = 0.0001
+        if len(waypoints) < 1:
+            return False
+        else:
+            for waypoint in waypoints:
+                if abs(pose.position.x-waypoint.position.x) < tolerance \
+                        and abs(pose.position.x-waypoint.position.x) < tolerance \
+                        and abs(pose.position.x-waypoint.position.x) < tolerance:
+                    return True
+            return False
 
 
 def main():

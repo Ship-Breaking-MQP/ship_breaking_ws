@@ -318,7 +318,10 @@ DAVIDSDK_INCLUDE_DIR:PATH=DAVIDSDK_INCLUDE_DIR-NOTFOUND
 DAVIDSDK_LIBRARY:FILEPATH=DAVIDSDK_LIBRARY-NOTFOUND
 
 //Path to a program.
-DOXYGEN_EXECUTABLE:FILEPATH=DOXYGEN_EXECUTABLE-NOTFOUND
+DOXYGEN_EXECUTABLE:FILEPATH=/usr/bin/doxygen
+
+//Doxygen found
+DOXYGEN_FOUND:BOOL=TRUE
 
 //DepthSense SDK directory
 DSSDK_DIR:PATH=DSSDK_DIR-NOTFOUND
@@ -412,6 +415,9 @@ OPENNI_INCLUDE_DIRS:PATH=/usr/include/ni
 
 //Path to a library.
 OPENNI_LIBRARY:FILEPATH=/usr/lib/libOpenNI.so
+
+//The directory containing a CMake configuration file for PCL-1.8.
+PCL-1.8_DIR:PATH=PCL-1.8_DIR-NOTFOUND
 
 //path to common headers
 PCL_COMMON_INCLUDE_DIR:PATH=/usr/local/include/pcl-1.8
@@ -536,7 +542,7 @@ USB_10_INCLUDE_DIR:PATH=/usr/include
 //Path to a library.
 USB_10_LIBRARY:FILEPATH=/usr/lib/x86_64-linux-gnu/libusb-1.0.so
 
-//The directory containing VTKConfig.cmake
+//The directory containing a CMake configuration file for VTK.
 VTK_DIR:PATH=/usr/lib/cmake/vtk-6.3
 
 //Path to a file.

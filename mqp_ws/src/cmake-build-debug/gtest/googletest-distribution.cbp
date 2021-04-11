@@ -1737,5 +1737,8 @@
 		<Unit filename="/home/tyler/ship_breaking_ws/mqp_ws/src/scrap_burning/scripts/pcl_subscriber.py">
 			<Option virtualFolder="CMake Files\scrap_burning\scripts\"/>
 		</Unit>
+		<Unit filename="/home/tyler/ship_breaking_ws/mqp_ws/src/scrap_burning/scripts/talker_python.py">
+			<Option virtualFolder="CMake Files\scrap_burning\scripts\"/>
+		</Unit>
 	</Project>
 </CodeBlocks_project_file>
