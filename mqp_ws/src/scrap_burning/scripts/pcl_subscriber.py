@@ -55,7 +55,7 @@ class PclSubscriber(object):
         waypoints = []
         trajectory_waypoints = []
         move_group = self.move_group
-        move_group.set_goal_orientation_tolerance(6)
+        move_group.set_goal_tolerance(6)
         # rospy.loginfo("Received path: %s", data)
         rospy.loginfo("Received %d points", len(data.poses))
         for stamped_pose in data.poses:

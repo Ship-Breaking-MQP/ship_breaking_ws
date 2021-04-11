@@ -45,9 +45,9 @@ void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, g
     for (const auto &p: curve_filtered->points) {
         if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
             geometry_msgs::Pose new_pose;
-            new_pose.position.x = p.x - 0.1;
+            new_pose.position.x = p.x - 0.15;
             new_pose.position.y = p.y;
-            new_pose.position.z = p.z - 0.35;
+            new_pose.position.z = p.z - 0.40;
             new_pose.orientation.w = -0.202;
             new_pose.orientation.x = 0.689;
             new_pose.orientation.y = -0.238;
