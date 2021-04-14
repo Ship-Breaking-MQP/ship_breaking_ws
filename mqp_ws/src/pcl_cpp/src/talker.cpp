@@ -47,7 +47,10 @@ void createPoses(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr& curve_filtered, g
             geometry_msgs::Pose new_pose;
             new_pose.position.x = p.x - 0.15;
             new_pose.position.y = p.y;
-            new_pose.position.z = p.z - 0.40;
+            new_pose.position.z = p.z - 0.41;
+//            new_pose.position.x = p.x - 0.15;
+//            new_pose.position.y = p.y;
+//            new_pose.position.z = p.z - 0.39;
             new_pose.orientation.w = -0.202;
             new_pose.orientation.x = 0.689;
             new_pose.orientation.y = -0.238;
@@ -89,7 +92,7 @@ void PointCloud2Vector2d(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr cloud, pcl
 }
 
 void FilterCloudFromCurve(const pcl::PointCloud<pcl::PointXYZRGB>::Ptr &world, pcl::PointCloud<pcl::PointXYZRGB> &out, pcl::PointCloud<pcl::PointXYZRGB>::Ptr &curve) {
-    float radius = 0.01;
+    float radius = 0.005;
     for (const auto &p : *curve) {
         for (const auto &c : *world) {
             if (!std::isnan(p.x) && !std::isnan(p.y) && !std::isnan(p.z)) {
@@ -135,7 +138,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
     int rMin = 0;
     int gMax = 30;
     int gMin = 0;
-    int bMax = 40;
+    int bMax = 30;
     int bMin = 0;
     pcl::ConditionAnd<pcl::PointXYZRGB>::Ptr color_cond(new pcl::ConditionAnd<pcl::PointXYZRGB>());
     color_cond->addComparison(pcl::PackedRGBComparison<pcl::PointXYZRGB>::Ptr(
@@ -161,6 +164,14 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     sensor_msgs::PointCloud2 cloud2;
 
+//    pcl::toROSMsg(*cloud_filtered, cloud2);
+//    cloud2.header = msg->header;
+//    cloud2.header.frame_id = "panda_link0";
+////    ROS_INFO("%s", cloud2.header.frame_id.c_str());
+//
+//    ROS_INFO("Publish Cloud");
+//    pub.publish(cloud2);
+
     // convert to NURBS data structure
     pcl::on_nurbs::NurbsDataCurve data;
     PointCloud2Vector2d(cloud_filtered, data.interior);
@@ -171,7 +182,7 @@ void cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
 
     // #################### CURVE PARAMETERS #########################
     unsigned order(3);
-    unsigned refinement(4);
+    unsigned refinement(5);
     unsigned n_control_points(20);
 
     pcl::on_nurbs::FittingCurve::Parameter curve_params;

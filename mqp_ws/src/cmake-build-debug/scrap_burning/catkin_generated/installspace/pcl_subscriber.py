@@ -55,7 +55,7 @@ class PclSubscriber(object):
         waypoints = []
         trajectory_waypoints = []
         move_group = self.move_group
-        move_group.set_goal_tolerance(6)
+        move_group.set_goal_tolerance(10)
         # rospy.loginfo("Received path: %s", data)
         rospy.loginfo("Received %d points", len(data.poses))
         for stamped_pose in data.poses:
@@ -109,14 +109,15 @@ class PclSubscriber(object):
         move_group.execute(plan, wait=True)
 
     def is_close(self, pose, waypoints):
+        height_tolerance = 0.01
         tolerance = 0.0001
         if len(waypoints) < 1:
             return False
         else:
             for waypoint in waypoints:
-                if abs(pose.position.x-waypoint.position.x) < tolerance \
-                        and abs(pose.position.x-waypoint.position.x) < tolerance \
-                        and abs(pose.position.x-waypoint.position.x) < tolerance:
+                if abs(pose.position.x-waypoint.position.x) < height_tolerance \
+                        and abs(pose.position.y-waypoint.position.y) < tolerance \
+                        and abs(pose.position.z-waypoint.position.z) < height_tolerance:
                     return True
             return False
 
